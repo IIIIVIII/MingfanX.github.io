@@ -1,13 +1,13 @@
 ---
 # Display name
-title: 吳健雄
+title: Mingfan Xie
 
 # Name pronunciation (optional)
-name_pronunciation: Chien Shiung Wu
+name_pronunciation: 
 
 # Full name (for SEO)
-first_name: Shiung Wu
-last_name: Chien
+first_name: Mingfan
+last_name: Xie
 
 # Status emoji
 status:
@@ -17,83 +17,79 @@ status:
 superuser: true
 
 # Role/position/tagline
-role: Director of Cloud Infrastructure
+role: College Student
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
-  - name: GenCoin
-    url: https://www.example.com/
+  - name: Purdue University
+    url: https://www.purdue.edu/
 
 # Social network links
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
 profiles:
   - icon: at-symbol
-    url: 'mailto:your-email@example.com'
+    url: 'issac.xieee@gmail.com'
     label: E-mail Me
-  - icon: brands/x
-    url: https://twitter.com/GetResearchDev
   - icon: brands/github
-    url: https://github.com/gcushen
+    url: https://github.com/IIIIVIII
   - icon: brands/linkedin
-    url: https://www.linkedin.com/
+    url: https://www.linkedin.com/in/mingfan777/
   - icon: brands/instagram
-    url: https://www.instagram.com/
+    url: https://www.instagram.com/issaciiiiviii/
 
 education:
-  - area: PhD Artificial Intelligence
-    institution: Stanford University
-    date_start: 2016-01-01
-    date_end: 2020-12-31
-    summary: |
-      Thesis on _Why LLMs are awesome_. Supervised by [Prof Joe Smith](https://example.com). Presented papers at 5 IEEE conferences with the contributions being published in 2 Springer journals.
-    button:
-      text: 'Read Thesis'
-      url: 'https://example.com'
-  - area: MEng Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    date_start: 2016-01-01
-    date_end: 2020-12-31
-    summary: |
-      GPA: 3.8/4.0
+  - area: BS Computer Science
+    institution: Purdue University
+    date_start: 2021-08
+    date_end: 2026-05
+    summary: |"As a Computer Science student at Purdue University, I have gained a strong foundation in software development, algorithm design, and data structures, equipping me with the technical skills and problem-solving abilities necessary to excel in the tech industry."
 
-      Courses included:
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - area: BSc Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    date_start: 2016-01-01
-    date_end: 2020-12-31
+
+
+
+     Courses included:
+      - Software Engineering
+      - Software Testing
+      - System Programing
+
+    
+  - area: Computer and Information Technology
+    institution: Purdue University
+    date_start: 2021-09
+    date_end: 2021-05
     summary: |
-      GPA: 3.4/4.0
-      
-      Courses included:
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
+
+
+
+    Courses included:
+      - System Administration
+      - ystems Analysis And Design Methods
+      - System And Organizational Security
+  
 work:
-  - position: Director of Cloud Infrastructure
-    company_name: GenCoin
-    company_url: ''
-    company_logo: ''
-    date_start: 2021-01-01
-    date_end: ''
-    summary: |2-
-      Responsibilities include:
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - position: Backend Software Engineer
-    company_name: X
-    company_url: ''
-    company_logo: ''
-    date_start: 2016-01-01
-    date_end: 2020-12-31
+  - position: Software Engineer Intern
+    company_name: Juneng Robotics Co., Ltd.
+    company_url: 'https://www.jnrs.com.cn/'
+    date_start: 2023-06-01
+    date_end: 2023-08-31
     summary: |
       Responsibilities include:
-      - Migrated infrastructure to a new data center
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
-      - lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - Engineered Java-based systems, including a modular robotic programming interface and J-MES plugins, enhancing production scheduling and maintenance tracking.
+      - Deployed vision systems with Java for image processing within AI-driven material handling solutions.
+      - Developed and integrated real-time control systems in C for RGV-based logistics and 2D/3D vision systems, augmented by Python for algorithmic enhancements.
+      - Led a team of 10 engineers, successfully developing embedded systems, resulting in a 25% increase in production efficiency and a 40% reduction in system response times.
+
+  - position: Data Analyst Assistant
+    company_name: Yinghai Group
+    company_url: 'http://www.yinghaigroup.com.cn/'
+    date_start: 2020-06-01
+    date_end: 2022-08-31
+    summary: |
+      Responsibilities include:
+      - Developed advanced Python scripts for automating multivariate regression analyses, optimizing financial portfolios by identifying key performance drivers.
+      - Spearheaded a macroeconomic data analytics project, assessing indicators across 20+ provinces and synthesizing over 10TB of data to inform C-level strategic decision-making.
+      - Generated analytical reports with statistical and predictive analytics, enhancing market forecasts by 15% and shaping executive strategies.
+
 
 # Skills
 # Add your own SVG icons to `assets/media/icons/`
@@ -101,40 +97,69 @@ skills:
   - name: Technical Skills
     items:
       - name: Python
-        description: ''
-        percent: 80
+        description: 'Proficient in developing scripts for data analysis, automation, and algorithmic enhancements.'
+        percent: 85
         icon: devicon/python
-      - name: RStudio
-        description: ''
-        percent: 100
-        icon: devicon/rstudio
-      - name: PyTorch
-        description: ''
-        percent: 40
-        icon: devicon/pytorch
+      - name: Java
+        description: 'Experienced in building Java-based systems for robotic programming interfaces and real-time control systems.'
+        percent: 80
+        icon: devicon/java
+      - name: C
+        description: 'Skilled in developing and integrating real-time control systems for logistics and vision systems.'
+        percent: 75
+        icon: devicon/c
+      - name: Git
+        description: 'Proficient in using Git for version control and collaborative software development.'
+        percent: 80
+        icon: devicon/git
+      - name: Visual Studio Code
+        description: 'Experienced in using Visual Studio Code for software development and debugging.'
+        percent: 90
+        icon: devicon/vscode
+      - name: Microsoft Excel
+        description: 'Advanced skills in data analysis and visualization using Excel.'
+        percent: 90
+        icon: devicon/excel
+      - name: JavaScript
+        description: 'Skilled in developing interactive web applications using JavaScript.'
+        percent: 70
+        icon: devicon/javascript
+      - name: React
+        description: 'Experienced in developing user interfaces with React.'
+        percent: 70
+        icon: devicon/react
+      - name: Software Development
+        description: 'Comprehensive experience in software development lifecycle, from requirements gathering to deployment.'
+        percent: 85
+        icon: devicon/softwaredevelopment
+      - name: Data Analysis
+        description: 'Proficient in data analysis techniques and tools for extracting insights and making data-driven decisions.'
+        percent: 90
+        icon: devicon/dataanalysis
+
   - name: Hobbies
     color: '#eeac02'
     color_border: '#f0bf23'
     items:
-      - name: Hiking
-        description: ''
-        percent: 60
-        icon: person-simple-walk
+      - name: Basketball
+        description: 'Active participant in the All-American Chinese Basketball League for multiple years.'
+        percent: 90
+        icon: basketball
       - name: Cats
-        description: ''
+        description: 'Avid cat enthusiast, enjoys spending time and caring for cats.'
         percent: 100
         icon: cat
-      - name: Photography
-        description: ''
+      - name: Go (Weiqi)
+        description: 'Enjoys playing Go, appreciating the strategy and depth of the ancient board game.'
         percent: 80
-        icon: camera
+        icon: go-board
 
 languages:
   - name: English
     percent: 100
   - name: Chinese
-    percent: 75
-  - name: Portuguese
+    percent: 100
+  - name: Spanish
     percent: 25
 
 # Awards.
@@ -142,31 +167,20 @@ languages:
 #   Only `title`, `awarder`, and `date` are required.
 #   Begin multi-line `summary` with YAML's `|` or `|2-` multi-line prefix and indent 2 spaces below.
 awards:
-  - title: Neural Networks and Deep Learning
-    url: https://www.coursera.org/learn/neural-networks-deep-learning
-    date: '2023-11-25'
+  - title: Google Data Analytics Certificate
+    url: 
+    date: '2024-07-05'
     awarder: Coursera
     icon: coursera
     summary: |
-      I studied the foundational concept of neural networks and deep learning. By the end, I was familiar with the significant technological trends driving the rise of deep learning; build, train, and apply fully connected deep neural networks; implement efficient (vectorized) neural networks; identify key parameters in a neural network’s architecture; and apply deep learning to your own applications.
-  - title: Blockchain Fundamentals
-    url: https://www.edx.org/professional-certificate/uc-berkeleyx-blockchain-fundamentals
-    date: '2023-07-01'
-    awarder: edX
-    icon: edx
-    summary: |
-      Learned:
-      - Synthesize your own blockchain solutions
-      - Gain an in-depth understanding of the specific mechanics of Bitcoin
-      - Understand Bitcoin’s real-life applications and learn how to attack and destroy Bitcoin, Ethereum, smart contracts and Dapps, and alternatives to Bitcoin’s Proof-of-Work consensus algorithm
-  - title: 'Object-Oriented Programming in R'
-    url: https://www.datacamp.com/courses/object-oriented-programming-with-s3-and-r6-in-r
-    certificate_url: https://www.datacamp.com
-    date: '2023-01-21'
-    awarder: datacamp
-    icon: datacamp
-    summary: |
-      Object-oriented programming (OOP) lets you specify relationships between functions and the objects that they can act on, helping you manage complexity in your code. This is an intermediate level course, providing an introduction to OOP, using the S3 and R6 systems. S3 is a great day-to-day R programming tool that simplifies some of the functions that you write. R6 is especially useful for industry-specific analyses, working with web APIs, and building GUIs.
+      I dedicated six months to studying the Google Data Analytics Certificate, during which I gained a comprehensive understanding of data analysis concepts and practices. By the end of the course, I was proficient in collecting, cleaning, and analyzing data; using tools like SQL, R, and Tableau for data visualization; applying statistical methods to interpret data; and creating data-driven reports. This rigorous program equipped me with the skills to perform end-to-end data analysis and apply my knowledge to real-world scenarios, enhancing my ability to make data-informed decisions.
+  
 ---
 
-I am currently Director of Cloud Infrastructure at GenCoin where I am leading teams on edge computing, deep sea data center architecture, and hivemind optimization.
+I am currently a Computer Science student at Purdue University, where I am developing a strong foundation in software engineering and data analysis through both coursework and practical projects. My academic journey at Purdue has equipped me with the technical skills and problem-solving abilities essential for tackling real-world challenges in the tech industry.
+
+
+
+
+
+
