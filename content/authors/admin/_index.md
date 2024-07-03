@@ -40,8 +40,8 @@ profiles:
 education:
   - area: BS Computer Science
     institution: Purdue University
-    date_start: 2021-08
-    date_end: 2026-05
+    date_start: 2021-08-29
+    date_end: 2026-05-10
     summary: "As a Computer Science student at Purdue University, I have gained a strong foundation in software development, algorithm design, and data structures, equipping me with the technical skills and problem-solving abilities necessary to excel in the tech industry."
 
     Courses included:
@@ -52,8 +52,8 @@ education:
     
   - area: Computer and Information Technology
     institution: Purdue University
-    date_start: 2021-09
-    date_end: 2021-05
+    date_start: 2021-08-29
+    date_end: 2021-05-05
     summary: |
 
 
