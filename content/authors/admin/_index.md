@@ -42,7 +42,7 @@ education:
     institution: Purdue University
     date_start: 2021-08
     date_end: 2026-05
-    summary: |"As a Computer Science student at Purdue University, I have gained a strong foundation in software development, algorithm design, and data structures, equipping me with the technical skills and problem-solving abilities necessary to excel in the tech industry."
+    summary: "As a Computer Science student at Purdue University, I have gained a strong foundation in software development, algorithm design, and data structures, equipping me with the technical skills and problem-solving abilities necessary to excel in the tech industry."
 
 
 
