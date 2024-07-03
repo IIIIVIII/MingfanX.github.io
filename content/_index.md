@@ -17,7 +17,7 @@ sections:
       # Show a call-to-action button under your biography? (optional)
       button:
         text: Download Résumé
-        url: uploads/resume.pdf
+        url: https://acrobat.adobe.com/link/review?uri=urn:aaid:scds:US:5da6a55c-3cb3-3598-968f-6f41d6b9f0b0
     design:
       banner:
         # Upload your cover image to the `assets/media/` folder and reference it here
