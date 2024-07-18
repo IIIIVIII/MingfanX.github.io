@@ -67,25 +67,24 @@ work:
   - position: Software Engineer Intern
     company_name: Juneng Robotics Co., Ltd.
     company_url: 'https://www.jnrs.com.cn/'
-    date_start: 2023-06-01
+    date_start: 2023-05-01
     date_end: 2023-08-31
     summary: |
       Responsibilities include:
-      - Engineered Java-based systems, including a modular robotic programming interface and J-MES plugins, enhancing production scheduling and maintenance tracking.
-      - Deployed vision systems with Java for image processing within AI-driven material handling solutions.
-      - Developed and integrated real-time control systems in C for RGV-based logistics and 2D/3D vision systems, augmented by Python for algorithmic enhancements.
-      - Led a team of 10 engineers, successfully developing embedded systems, resulting in a 25% increase in production efficiency and a 40% reduction in system response times.
+      - Enhanced robotic arm performance by integrating TensorFlow for network-based object detection and classification, enabling precise object manipulation, and optimizing the visual data processing pipeline with OpenCV.
+      - Architected microservices using Node.js and Express to streamline AI-driven robotic arm operations, improving task accuracy by 20% and reducing cycle times by 15%, enhancing overall operational efficiency.
+      - Directed a cross-functional team to develop and deploy new robotic arm features using React and Redux, resulting in a 20% boost in system efficiency and increased user engagement within the first month.
 
-  - position: Data Analyst Assistant
+  - position: Software Engineer Intern
     company_name: Yinghai Group
     company_url: 'http://www.yinghaigroup.com.cn/'
-    date_start: 2020-06-01
+    date_start: 2020-05-01
     date_end: 2022-08-31
     summary: |
       Responsibilities include:
-      - Developed advanced Python scripts for automating multivariate regression analyses, optimizing financial portfolios by identifying key performance drivers.
-      - Spearheaded a macroeconomic data analytics project, assessing indicators across 20+ provinces and synthesizing over 10TB of data to inform C-level strategic decision-making.
-      - Generated analytical reports with statistical and predictive analytics, enhancing market forecasts by 15% and shaping executive strategies.
+      - Optimized MySQL database queries for the construction product inventory system by indexing frequently accessed tables and refining query logic, reducing page load times by 15% and improving overall application performance.
+      - Designed and implemented responsive user interfaces with Vue.js for the company’s online platform, enhancing the digital catalog and product search for construction materials, leading to a 20% improvement in user satisfaction.
+      - Collaborated with the materials team to integrate real-time stock updates and automated reorder alerts, using API integration and database normalization, streamlining inventory management and reducing stockouts by 10%.
 
 
 # Skills
@@ -94,7 +93,7 @@ skills:
   - name: Technical Skills
     items:
       - name: Python
-        description: 'Proficient in developing scripts for data analysis, automation, and algorithmic enhancements.'
+        description: 'Advanced in developing scripts for data analysis, automation, and algorithmic enhancements.'
         percent: 85
         icon: devicon/python
       - name: Java
@@ -105,6 +104,58 @@ skills:
         description: 'Skilled in developing and integrating real-time control systems for logistics and vision systems.'
         percent: 75
         icon: devicon/c
+      - name: JavaScript
+        description: 'Skilled in developing interactive web applications using JavaScript.'
+        percent: 70
+        icon: devicon/javascript
+      - name: SQL
+        description: 'Proficient in database design, optimization, and complex query development.'
+        percent: 80
+        icon: devicon/sql
+      - name: HTML
+        description: 'Experienced in creating structured and semantic web pages using HTML.'
+        percent: 75
+        icon: devicon/html
+      - name: CSS
+        description: 'Proficient in styling web pages and creating responsive designs using CSS.'
+        percent: 70
+        icon: devicon/css
+      - name: React
+        description: 'Experienced in developing user interfaces with React.'
+        percent: 70
+        icon: devicon/react
+      - name: Vue.js
+        description: 'Skilled in building dynamic and responsive user interfaces using Vue.js.'
+        percent: 65
+        icon: devicon/vuejs
+      - name: Node.js
+        description: 'Experienced in developing server-side applications using Node.js.'
+        percent: 75
+        icon: devicon/nodejs
+      - name: Express.js
+        description: 'Proficient in building RESTful APIs and microservices with Express.js.'
+        percent: 70
+        icon: devicon/express
+      - name: Django
+        description: 'Experienced in developing web applications using the Django framework.'
+        percent: 75
+        icon: devicon/django
+      - name: Flask
+        description: 'Proficient in creating lightweight web applications and APIs using Flask.'
+        percent: 80
+        icon: devicon/flask
+      - name: PostgreSQL
+        description: 'Skilled in managing relational databases and optimizing queries with PostgreSQL.'
+        percent: 75
+        icon: devicon/postgresql
+      - name: TensorFlow
+        description: 'Advanced in building and deploying machine learning models using TensorFlow.'
+        percent: 70
+        icon: devicon/tensorflow
+      - name: OpenCV
+        description: 'Experienced in computer vision tasks and image processing with OpenCV.'
+        percent: 70
+        icon: devicon/opencv
       - name: Git
         description: 'Proficient in using Git for version control and collaborative software development.'
         percent: 80
@@ -117,22 +168,31 @@ skills:
         description: 'Advanced skills in data analysis and visualization using Excel.'
         percent: 90
         icon: devicon/excel
-      - name: JavaScript
-        description: 'Skilled in developing interactive web applications using JavaScript.'
+      - name: Selenium
+        description: 'Proficient in automated testing and web scraping using Selenium.'
         percent: 70
-        icon: devicon/javascript
-      - name: React
-        description: 'Experienced in developing user interfaces with React.'
+        icon: devicon/selenium
+      - name: Jenkins
+        description: 'Experienced in continuous integration and deployment with Jenkins.'
+        percent: 75
+        icon: devicon/jenkins
+      - name: Docker
+        description: 'Skilled in containerization and orchestration using Docker.'
+        percent: 75
+        icon: devicon/docker
+      - name: Kubernetes
+        description: 'Experienced in managing containerized applications with Kubernetes.'
         percent: 70
-        icon: devicon/react
-      - name: Software Development
-        description: 'Comprehensive experience in software development lifecycle, from requirements gathering to deployment.'
+        icon: devicon/kubernetes
+      - name: Pandas
+        description: 'Proficient in data manipulation and analysis using Pandas.'
         percent: 85
-        icon: devicon/softwaredevelopment
-      - name: Data Analysis
-        description: 'Proficient in data analysis techniques and tools for extracting insights and making data-driven decisions.'
-        percent: 90
-        icon: devicon/dataanalysis
+        icon: devicon/pandas
+      - name: JupyterLab
+        description: 'Experienced in creating interactive notebooks and conducting data analysis with JupyterLab.'
+        percent: 80
+        icon: devicon/jupyter
+
 
   - name: Hobbies
     color: '#eeac02'
