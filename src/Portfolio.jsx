@@ -2,11 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Github, 
   Linkedin, 
-  Mail, 
   ArrowRight, 
   Menu,
   X,
-  Terminal,
   Cpu,
   Globe,
   Zap,
@@ -184,7 +182,6 @@ const CustomCursor = () => {
 // Enhanced Magnetic Button with real magnetic effect
 const MagneticButton = ({ children, onClick, className = "" }) => {
   const buttonRef = useRef(null);
-  const { x, y } = useMousePosition();
   const [transform, setTransform] = useState({ x: 0, y: 0 });
   
   useEffect(() => {
@@ -239,23 +236,6 @@ const MagneticButton = ({ children, onClick, className = "" }) => {
   );
 };
 
-// Typewriter effect hook
-const useTypewriter = (text, speed = 50) => {
-  const [displayText, setDisplayText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  
-  useEffect(() => {
-    if (currentIndex < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayText(prev => prev + text[currentIndex]);
-        setCurrentIndex(prev => prev + 1);
-      }, speed);
-      return () => clearTimeout(timeout);
-    }
-  }, [currentIndex, text, speed]);
-  
-  return displayText;
-};
 
 // Scroll reveal component wrapper
 const ScrollReveal = ({ children, delay = 0, className = "" }) => {
@@ -263,6 +243,9 @@ const ScrollReveal = ({ children, delay = 0, className = "" }) => {
   const ref = useRef(null);
   
   useEffect(() => {
+    const currentRef = ref.current;
+    if (!currentRef) return;
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -272,14 +255,10 @@ const ScrollReveal = ({ children, delay = 0, className = "" }) => {
       { threshold: 0.1 }
     );
     
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    observer.observe(currentRef);
     
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
+      observer.unobserve(currentRef);
     };
   }, []);
   
