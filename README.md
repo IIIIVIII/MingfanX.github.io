@@ -2,7 +2,7 @@
 
 Modern, minimalist portfolio website showcasing my work in software engineering and AI systems.
 
-🌐 **Live Site:** [https://mingfanx.github.io](https://mingfanx.github.io)
+🌐 **Live Site:** https://iiiiviii.github.io/MingfanX.github.io/
 
 ## 🚀 Tech Stack
 
