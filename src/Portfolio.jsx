@@ -1,753 +1,591 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Github, 
-  Linkedin, 
-  ArrowRight, 
-  Menu,
-  X,
-  Cpu,
-  Globe,
-  Zap,
-  ExternalLink,
-  Code2
-} from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowUpRight, ArrowDown, Download } from 'lucide-react';
+import { PROFILE, MARQUEE, STATS, EXPERIENCE, PROJECTS, EDUCATION, SKILLS } from './data';
+import {
+  useSmoothScroll,
+  scrollToId,
+  Cursor,
+  RevealWords,
+  Reveal,
+  Counter,
+  Magnetic,
+  Marquee,
+} from './ui';
 
-// --- 1. Enhanced Animation & Styles Helpers ---
+const NAV = [
+  { id: 'about', label: 'About' },
+  { id: 'work', label: 'Experience' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'contact', label: 'Contact' },
+];
 
-// Smooth mouse position with easing
-const useMousePosition = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const mouseRef = useRef({ x: 0, y: 0 });
-  
+/* ============================================================ NAV */
+function Nav() {
+  const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    const updateMousePosition = (ev) => {
-      mouseRef.current = { x: ev.clientX, y: ev.clientY };
-    };
-    
-    const smoothUpdate = () => {
-      setMousePosition(prev => ({
-        x: prev.x + (mouseRef.current.x - prev.x) * 0.1,
-        y: prev.y + (mouseRef.current.y - prev.y) * 0.1
-      }));
-      requestAnimationFrame(smoothUpdate);
-    };
-    
-    window.addEventListener('mousemove', updateMousePosition);
-    smoothUpdate();
-    return () => window.removeEventListener('mousemove', updateMousePosition);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
-  return mousePosition;
-};
 
-// Particle background component
-const ParticleBackground = () => {
-  const canvasRef = useRef(null);
-  
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    const particles = [];
-    const particleCount = 50;
-    
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.opacity = Math.random() * 0.5 + 0.2;
-      }
-      
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        
-        if (this.x > canvas.width) this.x = 0;
-        if (this.x < 0) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = 0;
-        if (this.y < 0) this.y = canvas.height;
-      }
-      
-      draw() {
-        ctx.fillStyle = `rgba(6, 182, 212, ${this.opacity})`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-    
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-    
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(particle => {
-        particle.update();
-        particle.draw();
-      });
-      requestAnimationFrame(animate);
-    };
-    
-    animate();
-    
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
-  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-30" />;
-};
-
-// Enhanced Fluid Background with more layers
-const FluidBackground = () => (
-  <div className="fixed inset-0 z-0 overflow-hidden bg-[#050505] pointer-events-none">
-    {/* Animated Gradient Blobs */}
-    <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-purple-600/20 rounded-full blur-[120px] opacity-40 animate-blob mix-blend-screen" />
-    <div className="absolute top-[20%] right-[-10%] w-[40vw] h-[40vw] bg-cyan-500/20 rounded-full blur-[100px] opacity-40 animate-blob animation-delay-2000 mix-blend-screen" />
-    <div className="absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] bg-blue-600/20 rounded-full blur-[140px] opacity-40 animate-blob animation-delay-4000 mix-blend-screen" />
-    <div className="absolute top-[50%] left-[50%] w-[35vw] h-[35vw] bg-pink-500/15 rounded-full blur-[90px] opacity-30 animate-blob animation-delay-6000 mix-blend-screen" />
-    
-    {/* Noise Texture Overlay */}
-    <div 
-      className="absolute inset-0 opacity-[0.07] mix-blend-overlay"
-      style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-      }}
-    />
-    
-    {/* Grid overlay */}
-    <div 
-      className="absolute inset-0 opacity-[0.03]"
-      style={{
-        backgroundImage: 'linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)',
-        backgroundSize: '50px 50px'
-      }}
-    />
-  </div>
-);
-
-// Enhanced Custom Cursor with magnetic effect
-const CustomCursor = () => {
-  const { x, y } = useMousePosition();
-  const [isHovering, setIsHovering] = useState(false);
-  
-  useEffect(() => {
-    const handleMouseEnter = () => setIsHovering(true);
-    const handleMouseLeave = () => setIsHovering(false);
-    
-    const interactiveElements = document.querySelectorAll('button, a, [data-cursor="hover"]');
-    interactiveElements.forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
-    });
-    
-    return () => {
-      interactiveElements.forEach(el => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
-    };
-  }, []);
-  
   return (
-    <>
-      <div 
-        className={`fixed top-0 left-0 border border-white/30 rounded-full pointer-events-none z-50 transition-all duration-300 ease-out mix-blend-difference hidden md:block ${
-          isHovering ? 'w-16 h-16' : 'w-12 h-12'
-        }`}
-        style={{ 
-          transform: `translate(${x - (isHovering ? 32 : 24)}px, ${y - (isHovering ? 32 : 24)}px)`,
-          borderColor: isHovering ? 'rgba(6, 182, 212, 0.6)' : 'rgba(255, 255, 255, 0.3)'
-        }}
-      />
-      <div 
-        className="fixed top-0 left-0 w-2 h-2 bg-cyan-400 rounded-full pointer-events-none z-50 transition-transform duration-75 ease-out hidden md:block"
-        style={{ transform: `translate(${x - 4}px, ${y - 4}px)` }}
-      />
-    </>
-  );
-};
-
-// Enhanced Magnetic Button with real magnetic effect
-const MagneticButton = ({ children, onClick, className = "" }) => {
-  const buttonRef = useRef(null);
-  const [transform, setTransform] = useState({ x: 0, y: 0 });
-  
-  useEffect(() => {
-    const button = buttonRef.current;
-    if (!button) return;
-    
-    const handleMouseMove = (e) => {
-      const rect = button.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const distanceX = e.clientX - centerX;
-      const distanceY = e.clientY - centerY;
-      const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-      const maxDistance = 100;
-      
-      if (distance < maxDistance) {
-        const force = (maxDistance - distance) / maxDistance;
-        setTransform({
-          x: distanceX * force * 0.2,
-          y: distanceY * force * 0.2
-        });
-      } else {
-        setTransform({ x: 0, y: 0 });
-      }
-    };
-    
-    const handleMouseLeave = () => {
-      setTransform({ x: 0, y: 0 });
-    };
-    
-    button.addEventListener('mousemove', handleMouseMove);
-    button.addEventListener('mouseleave', handleMouseLeave);
-    
-    return () => {
-      button.removeEventListener('mousemove', handleMouseMove);
-      button.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, []);
-  
-  return (
-    <button 
-      ref={buttonRef}
-      onClick={onClick} 
-      className={`transition-all duration-300 ${className}`}
-      style={{
-        transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.x || transform.y ? 1.05 : 1})`
-      }}
-      data-cursor="hover"
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        scrolled ? 'py-3 backdrop-blur-md bg-[#ece8e0]/70 border-b border-[var(--line)]' : 'py-6'
+      }`}
     >
-      {children}
-    </button>
-  );
-};
-
-
-// Scroll reveal component wrapper
-const ScrollReveal = ({ children, delay = 0, className = "" }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
-  
-  useEffect(() => {
-    const currentRef = ref.current;
-    if (!currentRef) return;
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    
-    observer.observe(currentRef);
-    
-    return () => {
-      observer.unobserve(currentRef);
-    };
-  }, []);
-  
-  return (
-    <div
-      ref={ref}
-      className={`${className} ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-      } transition-all duration-700`}
-      style={{ transitionDelay: `${delay}s` }}
-    >
-      {children}
-    </div>
-  );
-};
-
-// --- 3. Enhanced Page Components ---
-
-const HomePage = ({ setPage }) => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-  
-  return (
-    <div className="h-full flex flex-col justify-center relative px-6 md:px-12 overflow-hidden">
-      {/* Parallax background elements */}
-      <div 
-        className="absolute right-0 top-0 w-[40vw] h-[40vw] bg-cyan-500/5 rounded-full blur-3xl"
-        style={{
-          transform: `translate(${mousePos.x * 50}px, ${mousePos.y * 50}px)`
-        }}
-      />
-      
-      {/* Huge Typography */}
-      <div className="relative z-10">
-        <div className="overflow-hidden mb-2">
-          <p className="font-mono text-cyan-400 text-sm md:text-base tracking-[0.2em] animate-fade-in-up">
-            SOFTWARE ENGINEER & AI PRACTITIONER
-          </p>
-        </div>
-        
-        <h1 
-          className="text-[12vw] leading-[0.85] font-bold text-white tracking-tighter mix-blend-difference animate-reveal"
-          style={{
-            transform: `perspective(1000px) rotateY(${(mousePos.x - 0.5) * 5}deg) rotateX(${(mousePos.y - 0.5) * -5}deg)`
-          }}
+      <div className="mx-auto max-w-[1500px] px-6 md:px-10 flex items-center justify-between">
+        <button
+          onClick={() => scrollToId('top')}
+          className="font-display text-xl font-bold tracking-tight"
+          data-hover
         >
-          MINGFAN
-          <br />
-          <span className="outline-text text-transparent stroke-white stroke-2 opacity-50">XIE</span>
-        </h1>
-
-        <div className="mt-12 flex flex-col md:flex-row gap-8 md:items-end">
-          <p className="text-slate-400 max-w-md text-lg leading-relaxed animate-fade-in-up delay-100">
-            I craft <span className="text-white">high-performance systems</span>. 
-            Currently bridging <span className="text-cyan-400">AI Theory</span> with <span className="text-cyan-400">Real-World Infrastructure</span> at Purdue.
-          </p>
-
-          <div className="flex gap-6 animate-fade-in-up delay-200">
-            <MagneticButton 
-              onClick={() => setPage('projects')}
-              className="group flex items-center gap-3 px-8 py-4 bg-white text-black font-bold font-mono hover:bg-cyan-400 transition-all duration-300 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] relative overflow-hidden"
-            >
-              <span className="relative z-10">VIEW PROJECTS</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform relative z-10" />
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </MagneticButton>
-          </div>
-        </div>
-      </div>
-
-      {/* Enhanced Decorative Code Snippet with animation */}
-      <div className="absolute right-12 bottom-12 font-mono text-[10px] text-slate-600 hidden md:block opacity-50 text-right animate-fade-in-up delay-300">
-        <div className="relative">
-          <div className="absolute -inset-1 bg-cyan-500/20 blur-sm opacity-0 hover:opacity-100 transition-opacity" />
-          <div className="relative">
-            <div>const profile = {'{'}</div>
-            <div className="pl-4">gre: <span className="text-cyan-400">336</span>,</div>
-            <div className="pl-4">gpa: <span className="text-cyan-400">3.45</span>,</div>
-            <div className="pl-4">focus: <span className="text-purple-400">["Systems", "MLOps"]</span></div>
-            <div>{'}'};</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ExperiencePage = () => {
-  const experiences = [
-    {
-      id: "01",
-      role: "ML Systems Intern",
-      company: "Juneng Robotics",
-      period: "May '23 — Aug '23",
-      location: "Shenzhen",
-      desc: "Optimized perception stack for indoor navigation robots. Bridged the gap between academic model theory and embedded hardware constraints.",
-      tags: ["C++", "TFLite", "ROS", "Edge AI"],
-      highlight: "30% Latency Drop via INT8 Quantization"
-    },
-    {
-      id: "02",
-      role: "Backend Intern",
-      company: "Xiaomi Technology",
-      period: "May '22 — Aug '22",
-      location: "Beijing",
-      desc: "Re-engineered recommendation flows to break filter bubbles. Built high-concurrency pipelines processing multi-TB datasets.",
-      tags: ["Java", "Spark", "Kafka", "K8s"],
-      highlight: "+8% User Session Duration"
-    }
-  ];
-
-  return (
-    <div className="w-full max-w-6xl mx-auto pt-20">
-      <h2 className="text-[8vw] font-bold text-white/10 leading-none mb-12 select-none">EXPERIENCE</h2>
-      
-      <div className="space-y-0">
-        {experiences.map((exp, idx) => (
-          <ScrollReveal key={exp.id} delay={idx * 0.1}>
-            <div 
-              className="group relative border-t border-white/10 py-12 md:py-16 hover:bg-white/5 transition-all duration-500 px-4 md:px-8"
-            >
-              {/* Glassmorphism effect on hover */}
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 backdrop-blur-sm" />
-              
-              <div className="md:grid md:grid-cols-12 gap-8 items-start relative z-10">
-                
-                {/* ID & Period */}
-                <div className="md:col-span-2 font-mono text-slate-500 text-sm mb-2 md:mb-0">
-                  <span className="text-cyan-500 block text-xl mb-2 group-hover:scale-110 transition-transform duration-300">{exp.id}</span>
-                  {exp.period}
-                </div>
-
-                {/* Main Info */}
-                <div className="md:col-span-5">
-                  <h3 className="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors group-hover:translate-x-2 transition-transform duration-300">
-                    {exp.company}
-                  </h3>
-                  <div className="text-xl text-slate-400 font-light flex items-center gap-2">
-                    {exp.role}
-                  </div>
-                </div>
-
-                {/* Details */}
-                <div className="md:col-span-5 mt-6 md:mt-0">
-                  <p className="text-slate-400 leading-relaxed mb-6">{exp.desc}</p>
-                  
-                  {/* Highlight Metric with glow effect */}
-                  <div className="flex items-center gap-3 bg-cyan-500/10 border border-cyan-500/20 p-3 rounded mb-6 group-hover:bg-cyan-500/20 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300">
-                    <Zap className="w-4 h-4 text-cyan-400 group-hover:rotate-12 transition-transform" />
-                    <span className="text-cyan-100 text-sm font-mono">{exp.highlight}</span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {exp.tags.map(t => (
-                      <span 
-                        key={t} 
-                        className="px-2 py-1 border border-white/10 rounded-full text-[10px] font-mono text-slate-500 uppercase tracking-wider hover:border-cyan-500/50 hover:text-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 cursor-default"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ScrollReveal>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const ProjectsPage = () => {
-  const projects = [
-    {
-      title: "TripSplit",
-      category: "Distributed System",
-      year: "2024",
-      desc: "Full-stack group travel platform solving fragmentation in planning. Features graph-based friend suggestions and scalable notifications.",
-      tech: ["Spring Boot", "Flutter", "MySQL", "Redis"],
-      stat: "Full Microservice Arch"
-    },
-    {
-      title: "CommuneKit",
-      category: "High-Perf Web",
-      year: "2023",
-      desc: "Community sharing platform engineered for high-cardinality search. Optimized for p95 latency using multi-layer caching.",
-      tech: ["React", "Spring Boot", "Redis"],
-      stat: "25% Latency Reduction"
-    },
-    {
-      title: "BitCase Store",
-      category: "E-Commerce AI",
-      year: "2023",
-      desc: "DTC storefront with hybrid semantic search (Elasticsearch + Vectors) and automated inventory management.",
-      tech: ["Node.js", "Postgres", "Vector Search"],
-      stat: "+9% CTR via AI"
-    }
-  ];
-
-  return (
-    <div className="w-full max-w-7xl mx-auto pt-20 px-4">
-      <div className="flex justify-between items-end mb-16 border-b border-white/10 pb-6">
-        <h2 className="text-6xl md:text-8xl font-bold text-white tracking-tighter">WORK</h2>
-        <span className="font-mono text-cyan-500 mb-2">SELECTED PROJECTS</span>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((p, i) => (
-          <ScrollReveal key={i} delay={i * 0.1}>
-            <div 
-              className="group relative bg-[#0a0a0a] border border-white/10 p-8 h-[400px] flex flex-col justify-between hover:border-cyan-500/50 transition-all duration-500 overflow-hidden"
-              style={{ 
-                transformStyle: 'preserve-3d'
-              }}
-              data-cursor="hover"
-            >
-              {/* 3D Hover Effect */}
-              <div 
-                className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-purple-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                  transform: 'translateZ(20px)'
-                }}
-              />
-              
-              {/* Glow effect */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-500 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500" />
-              
-              <div className="relative z-10">
-                <div className="flex justify-between items-start mb-4">
-                  <span className="font-mono text-xs text-cyan-500 tracking-widest uppercase">{p.category}</span>
-                  <span className="font-mono text-xs text-slate-600">{p.year}</span>
-                </div>
-                <h3 className="text-3xl font-bold text-white mb-4 group-hover:translate-x-2 group-hover:text-cyan-400 transition-all duration-300">
-                  {p.title}
-                </h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{p.desc}</p>
-              </div>
-
-              <div className="relative z-10">
-                 <div className="mb-6 pt-4 border-t border-white/5">
-                   <div className="text-2xl font-bold text-white/20 group-hover:text-white group-hover:scale-110 transition-all duration-300">
-                     {p.stat}
-                   </div>
-                 </div>
-                 <div className="flex flex-wrap gap-2">
-                   {p.tech.map(t => (
-                     <span 
-                       key={t} 
-                       className="text-[10px] font-mono border border-white/10 px-2 py-1 text-slate-500 rounded hover:border-cyan-500/30 hover:text-cyan-400 hover:bg-cyan-500/10 transition-all duration-300 cursor-default"
-                     >
-                       {t}
-                     </span>
-                   ))}
-                 </div>
-              </div>
-
-              {/* Enhanced Decorative Icon */}
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform group-hover:-translate-y-2 group-hover:rotate-12">
-                <ExternalLink className="w-6 h-6 text-cyan-500" />
-              </div>
-            </div>
-          </ScrollReveal>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const AboutPage = () => {
-  return (
-    <ScrollReveal className="max-w-5xl mx-auto pt-20 px-6">
-       <div className="grid md:grid-cols-2 gap-16 items-center">
-         <div>
-           <h2 className="text-6xl font-bold text-white mb-8 leading-tight">
-             ENGINEERING <br/>
-             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 animate-gradient">
-               AS AN ART FORM.
-             </span>
-           </h2>
-           <div className="space-y-6 text-lg text-slate-400 font-light leading-relaxed">
-             <p>
-               <strong className="text-white">It started with sneakers.</strong> In high school, I spent hours balancing neon greens with metallic silvers on custom Air Jordans. I realized that engineering isn't just calculation—it's a creative medium.
-             </p>
-             <p>
-               Today, I replace colors with <span className="text-cyan-400">algorithms</span> and canvas with <span className="text-cyan-400">infrastructure</span>. 
-             </p>
-             <p>
-               My work sits at the intersection of Systems and AI. I don't just train models; I build the engines that make them run efficiently in the messy, constrained real world.
-             </p>
-           </div>
-         </div>
-
-         <div className="bg-[#0a0a0a] border border-white/10 p-8 md:p-12 relative overflow-hidden group hover:border-cyan-500/50 transition-all duration-500">
-           {/* Enhanced glow effect */}
-           <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 blur-3xl rounded-full group-hover:bg-cyan-500/20 transition-all duration-500" />
-           <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
-           
-           <h3 className="font-mono text-sm text-cyan-500 mb-8 tracking-widest relative z-10">TECHNICAL ARSENAL</h3>
-           
-           <div className="space-y-8 relative z-10">
-              <div className="group/item">
-                <div className="text-white font-bold mb-2 flex items-center gap-2 group-hover/item:text-cyan-400 transition-colors">
-                  <Cpu className="w-4 h-4 group-hover/item:rotate-12 transition-transform" /> Core
-                </div>
-                <div className="text-slate-400 text-sm">System Optimization, Backend Architecture, Quantization, Edge AI</div>
-              </div>
-              <div className="group/item">
-                <div className="text-white font-bold mb-2 flex items-center gap-2 group-hover/item:text-cyan-400 transition-colors">
-                  <Code2 className="w-4 h-4 group-hover/item:rotate-12 transition-transform" /> Languages
-                </div>
-                <div className="text-slate-400 text-sm">Java, C++, Go, Python, TypeScript, SQL</div>
-              </div>
-              <div className="group/item">
-                <div className="text-white font-bold mb-2 flex items-center gap-2 group-hover/item:text-cyan-400 transition-colors">
-                  <Globe className="w-4 h-4 group-hover/item:rotate-12 transition-transform" /> Infrastructure
-                </div>
-                <div className="text-slate-400 text-sm">AWS, Docker, Kubernetes, Kafka, Redis, Terraform</div>
-              </div>
-           </div>
-         </div>
-       </div>
-    </ScrollReveal>
-  );
-};
-
-const ContactPage = () => (
-  <div className="h-full flex flex-col justify-center items-center text-center px-6">
-    <p className="font-mono text-cyan-400 mb-6 tracking-widest animate-fade-in">OPEN FOR OPPORTUNITIES</p>
-    <h2 className="text-6xl md:text-9xl font-bold text-white mb-8 tracking-tighter animate-scale-in">
-      LET'S <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-600">BUILD.</span>
-    </h2>
-    
-    <a 
-      href="mailto:issac.xieee@gmail.com" 
-      className="text-2xl md:text-4xl text-slate-400 hover:text-cyan-400 transition-all duration-300 border-b-2 border-transparent hover:border-cyan-400 pb-2 mb-12 animate-fade-in-up hover:scale-110 inline-block"
-      data-cursor="hover"
-    >
-      issac.xieee@gmail.com
-    </a>
-
-    <div className="flex gap-8 animate-fade-in-up delay-100">
-      <a 
-        href="https://linkedin.com/in/mingfan777" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="text-white hover:text-cyan-400 transition-all duration-300 flex items-center gap-2 font-mono text-sm uppercase tracking-widest hover:scale-110 group"
-        data-cursor="hover"
-      >
-        <Linkedin className="w-5 h-5 group-hover:rotate-12 transition-transform" /> LinkedIn
-      </a>
-      <a 
-        href="https://github.com/IIIIVIII" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="text-white hover:text-cyan-400 transition-all duration-300 flex items-center gap-2 font-mono text-sm uppercase tracking-widest hover:scale-110 group"
-        data-cursor="hover"
-      >
-        <Github className="w-5 h-5 group-hover:rotate-12 transition-transform" /> GitHub
-      </a>
-    </div>
-  </div>
-);
-
-// --- 4. Main Layout with Enhanced Transitions ---
-
-const PortfolioV4 = () => {
-  const [page, setPage] = useState('home');
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
-
-  const handlePageChange = (newPage) => {
-    if (page === newPage) return;
-    setMenuOpen(false);
-    setTransitioning(true);
-    setTimeout(() => {
-      setPage(newPage);
-      setTransitioning(false);
-      window.scrollTo(0, 0);
-    }, 600);
-  };
-
-  return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-cyan-500/40 overflow-x-hidden">
-      <style jsx global>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-        .animation-delay-6000 {
-          animation-delay: 6s;
-        }
-        .outline-text {
-          -webkit-text-stroke: 1px rgba(255,255,255,0.3);
-          color: transparent;
-        }
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 3s ease infinite;
-        }
-      `}</style>
-
-      <FluidBackground />
-      <ParticleBackground />
-      <CustomCursor />
-
-      {/* Enhanced Header with glassmorphism */}
-      <nav className="fixed top-0 w-full z-40 px-6 py-8 flex justify-between items-center backdrop-blur-md bg-black/20 border-b border-white/5">
-        <button 
-          onClick={() => handlePageChange('home')}
-          className="text-xl font-bold tracking-tighter hover:text-cyan-400 transition-all duration-300 z-50 hover:scale-110"
-          data-cursor="hover"
-        >
-          MX<span className="text-cyan-500">.</span>
+          MX<span className="text-accent">.</span>
         </button>
 
-        <div className="hidden md:flex gap-8">
-          {['experience', 'projects', 'about', 'contact'].map((item) => (
+        <nav className="hidden md:flex items-center gap-8">
+          {NAV.map((n) => (
             <button
-              key={item}
-              onClick={() => handlePageChange(item)}
-              className={`text-xs font-mono font-bold uppercase tracking-widest hover:text-cyan-400 transition-all duration-300 relative group ${page === item ? 'text-cyan-400' : 'text-slate-400'}`}
-              data-cursor="hover"
+              key={n.id}
+              onClick={() => scrollToId(n.id)}
+              className="font-mono text-[11px] uppercase tracking-[0.18em] link-underline"
+              data-hover
             >
-              {item}
-              <span className={`absolute -bottom-2 left-0 h-[1px] bg-cyan-400 transition-all duration-300 ${page === item ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+              {n.label}
             </button>
           ))}
+        </nav>
+
+        <div className="hidden md:flex items-center gap-3">
+          <Magnetic>
+            <a
+              href={PROFILE.resume}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--ink-soft)] hover:text-[var(--accent)] transition-colors duration-300"
+              data-hover
+            >
+              <Download className="w-3.5 h-3.5" /> Résumé
+            </a>
+          </Magnetic>
+          <Magnetic>
+            <a
+              href={`mailto:${PROFILE.email}`}
+              className="inline-flex font-mono text-[11px] uppercase tracking-[0.18em] border border-[var(--ink)] rounded-full px-5 py-2 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors duration-300"
+              data-hover
+            >
+              Let’s talk
+            </a>
+          </Magnetic>
         </div>
 
-        <button 
-          className="md:hidden z-50 text-white hover:text-cyan-400 transition-colors"
-          onClick={() => setMenuOpen(!menuOpen)}
-          data-cursor="hover"
+        <a
+          href={PROFILE.resume}
+          target="_blank"
+          rel="noreferrer"
+          className="md:hidden inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] border border-[var(--ink)] rounded-full px-4 py-1.5"
         >
-          {menuOpen ? <X /> : <Menu />}
-        </button>
-      </nav>
+          <Download className="w-3.5 h-3.5" /> CV
+        </a>
+      </div>
+    </header>
+  );
+}
 
-      {/* Enhanced Mobile Menu Overlay */}
-      <div className={`fixed inset-0 bg-black/95 backdrop-blur-xl z-30 flex flex-col items-center justify-center gap-8 transition-all duration-500 ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
-        {['home', 'experience', 'projects', 'about', 'contact'].map((item, idx) => (
-          <button
-            key={item}
-            onClick={() => handlePageChange(item)}
-            className="text-4xl font-bold uppercase text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-600 hover:to-cyan-400 transition-all duration-300 hover:scale-110"
-          >
-            0{idx + 1} {item}
-          </button>
+/* ============================================================ HERO */
+function Hero() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  const y = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+
+  return (
+    <section ref={ref} id="top" className="relative min-h-[100svh] flex flex-col justify-center px-6 md:px-10 pt-28 pb-16">
+      <motion.div style={{ y, opacity }} className="mx-auto max-w-[1500px] w-full">
+        <div className="flex items-center gap-4 mb-8 font-mono text-[11px] md:text-xs uppercase tracking-[0.25em] text-[var(--ink-soft)]">
+          <span className="inline-block w-10 h-px bg-[var(--ink)]" />
+          {PROFILE.roles.join('  /  ')}
+        </div>
+
+        <h1 className="font-display font-bold text-[var(--ink)]" style={{ fontSize: 'clamp(3.5rem, 15vw, 16rem)' }}>
+          <RevealWords text="MINGFAN" as="div" />
+          <div className="flex flex-wrap items-baseline gap-x-6">
+            <RevealWords text="XIE" as="span" delay={0.1} className="text-stroke" />
+            <span className="font-serif-it text-[var(--ink-soft)]" style={{ fontSize: 'clamp(1.4rem, 4vw, 3.2rem)', fontStyle: 'italic' }}>
+              ({PROFILE.alias})
+            </span>
+          </div>
+        </h1>
+
+        <div className="mt-10 md:mt-14 grid md:grid-cols-12 gap-8 items-end">
+          <Reveal delay={0.3} className="md:col-span-7 lg:col-span-6">
+            <p className="text-lg md:text-2xl leading-relaxed text-[var(--ink-soft)] max-w-2xl">
+              I build <span className="text-[var(--ink)]">AI systems</span> and{' '}
+              <span className="text-[var(--ink)]">full-stack platforms</span> that ship{' '}
+              <span className="font-serif-it text-accent">measurable impact</span> — from edge perception
+              and MLOps to LLM agents.
+            </p>
+          </Reveal>
+          <Reveal delay={0.45} className="md:col-span-5 lg:col-start-9 lg:col-span-4 md:justify-self-end">
+            <div className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--ink-soft)] space-y-1 md:text-right">
+              <div>UCLA — MEng AI ’27</div>
+              <div>Purdue — B.S. CS ’25</div>
+              <div className="text-accent">Open to SWE / AI roles</div>
+            </div>
+            <div className="mt-5 md:flex md:justify-end">
+              <Magnetic>
+                <a
+                  href={PROFILE.resume}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] border border-[var(--ink)] rounded-full px-5 py-2.5 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors duration-300"
+                  data-hover
+                >
+                  <Download className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition-transform" /> Download Résumé
+                </a>
+              </Magnetic>
+            </div>
+          </Reveal>
+        </div>
+      </motion.div>
+
+      <button
+        onClick={() => scrollToId('about')}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--ink-soft)]"
+        data-hover
+      >
+        Scroll
+        <ArrowDown className="w-4 h-4 animate-bounce" />
+      </button>
+    </section>
+  );
+}
+
+/* ============================================================ ABOUT + STATS */
+function About() {
+  return (
+    <section id="about" className="relative py-24 md:py-40 px-6 md:px-10">
+      <div className="mx-auto max-w-[1500px]">
+        <Reveal>
+          <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--ink-soft)]">
+            (01) — Profile
+          </span>
+        </Reveal>
+
+        <div className="mt-10 max-w-5xl">
+          <RevealWords
+            text="I work at the seam between AI and systems — turning models and messy data into products that are fast, observable and genuinely useful."
+            className="font-display font-medium leading-[1.05]"
+            style={{ fontSize: 'clamp(1.6rem, 4.2vw, 3.4rem)' }}
+            as="h2"
+          />
+        </div>
+
+        <div className="mt-10 grid md:grid-cols-2 gap-8 max-w-4xl text-[var(--ink-soft)] text-lg leading-relaxed">
+          <Reveal delay={0.1}>
+            <p>
+              Across robotics and large-scale recommendation, I’ve owned the full path: operator tooling,
+              data and labeling pipelines, model training, and production serving with real observability.
+            </p>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p>
+              Now studying AI at UCLA after finishing CS at Purdue, I care about engineering that holds up
+              under load — and about <span className="font-serif-it text-accent">making the impact legible</span>.
+            </p>
+          </Reveal>
+        </div>
+
+        {/* Impact stats */}
+        <div className="mt-20 md:mt-28 grid grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--line)] border border-[var(--line)]">
+          {STATS.map((s, i) => (
+            <Reveal key={i} delay={i * 0.08} className="bg-[var(--paper)] p-6 md:p-8">
+              <div className="font-display font-bold text-[var(--ink)]" style={{ fontSize: 'clamp(2.8rem, 7vw, 5.5rem)' }}>
+                <Counter value={s.value} prefix={s.prefix || ''} suffix={s.suffix || ''} />
+              </div>
+              <p className="mt-3 text-sm text-[var(--ink-soft)] leading-snug">{s.label}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ MARQUEE BAND */
+function Band() {
+  return (
+    <section className="py-10 md:py-16 border-y border-[var(--line)] overflow-hidden">
+      <div className="font-display font-bold uppercase tracking-tight" style={{ fontSize: 'clamp(2.5rem, 8vw, 7rem)' }}>
+        <Marquee items={MARQUEE} duration={34} />
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ EXPERIENCE */
+function Experience() {
+  return (
+    <section id="work" className="py-24 md:py-40 px-6 md:px-10">
+      <div className="mx-auto max-w-[1500px]">
+        <Reveal className="flex items-end justify-between border-b border-[var(--line)] pb-6 mb-4">
+          <h2 className="font-display font-bold" style={{ fontSize: 'clamp(2.5rem, 7vw, 6rem)' }}>
+            Experience
+          </h2>
+          <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--ink-soft)] mb-2">
+            (02)
+          </span>
+        </Reveal>
+
+        {EXPERIENCE.map((exp) => (
+          <ExperienceRow key={exp.id} exp={exp} />
         ))}
       </div>
+    </section>
+  );
+}
 
-      {/* Enhanced Page Content with Fade/Slide Transition */}
-      <main 
-        className={`relative min-h-screen flex flex-col justify-center pt-24 pb-12 transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${
-          transitioning ? 'opacity-0 translate-y-12 blur-md scale-95' : 'opacity-100 translate-y-0 blur-0 scale-100'
-        }`}
+function ExperienceRow({ exp }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Reveal className="border-b border-[var(--line)]">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="group w-full text-left py-8 md:py-12 grid md:grid-cols-12 gap-4 md:gap-8 items-start"
+        data-hover
       >
-        {page === 'home' && <HomePage setPage={handlePageChange} />}
-        {page === 'experience' && <ExperiencePage />}
-        {page === 'projects' && <ProjectsPage />}
-        {page === 'about' && <AboutPage />}
-        {page === 'contact' && <ContactPage />}
-      </main>
+        <div className="md:col-span-1 font-mono text-sm text-accent">{exp.id}</div>
+        <div className="md:col-span-6">
+          <h3
+            className="font-display font-semibold leading-tight transition-transform duration-500 group-hover:translate-x-2"
+            style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)' }}
+          >
+            {exp.company}
+          </h3>
+          <div className="mt-2 text-[var(--ink-soft)]">{exp.role}</div>
+        </div>
+        <div className="md:col-span-4 font-mono text-xs uppercase tracking-[0.15em] text-[var(--ink-soft)] md:pt-3">
+          {exp.period}
+        </div>
+        <div className="md:col-span-1 flex md:justify-end md:pt-2">
+          <ArrowUpRight
+            className={`w-6 h-6 transition-transform duration-500 ${open ? 'rotate-90' : 'group-hover:rotate-45'}`}
+          />
+        </div>
+      </button>
 
+      <motion.div
+        initial={false}
+        animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="overflow-hidden"
+      >
+        <div className="md:grid md:grid-cols-12 gap-8 pb-10 md:pb-14">
+          <div className="md:col-start-2 md:col-span-6 text-[var(--ink-soft)] leading-relaxed mb-6 md:mb-0">
+            {exp.summary}
+          </div>
+          <ul className="md:col-span-4 space-y-4">
+            {exp.bullets.map((b, i) => (
+              <li key={i} className="flex gap-3 text-sm leading-relaxed text-[var(--ink-soft)]">
+                <span className="text-accent mt-1">—</span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="md:col-start-2 flex flex-wrap gap-2 pb-12">
+          {exp.tags.map((t) => (
+            <span
+              key={t}
+              className="font-mono text-[10px] uppercase tracking-wider border border-[var(--line)] rounded-full px-3 py-1 text-[var(--ink-soft)]"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </motion.div>
+    </Reveal>
+  );
+}
+
+/* ============================================================ PROJECTS (horizontal scroll) */
+function Projects() {
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  return isDesktop ? <ProjectsHorizontal /> : <ProjectsStacked />;
+}
+
+function ProjectsHorizontal() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref });
+  const panels = PROJECTS.length + 1; // intro + projects
+  const x = useTransform(scrollYProgress, [0, 1], ['0vw', `-${(panels - 1) * 100}vw`]);
+
+  return (
+    <section id="projects" ref={ref} style={{ height: `${panels * 100}vh` }} className="relative">
+      <div className="sticky top-0 h-[100svh] overflow-hidden">
+        <motion.div style={{ x }} className="flex h-full" >
+          {/* intro panel */}
+          <div className="w-screen h-full shrink-0 flex flex-col justify-center px-10 lg:px-20">
+            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--ink-soft)]">(03) — Selected Work</span>
+            <h2 className="font-display font-bold mt-6" style={{ fontSize: 'clamp(3rem, 9vw, 9rem)' }}>
+              Selected<br />
+              <span className="text-stroke">Projects</span>
+            </h2>
+            <p className="mt-8 max-w-md text-[var(--ink-soft)] text-lg flex items-center gap-3">
+              <ArrowUpRight className="w-5 h-5 rotate-45" /> Scroll to slide through the work
+            </p>
+          </div>
+
+          {PROJECTS.map((p, i) => (
+            <ProjectPanel key={p.id} project={p} index={i} />
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function ProjectPanel({ project, index }) {
+  return (
+    <div className="w-screen h-full shrink-0 flex items-center px-10 lg:px-20 border-l border-[var(--line)]">
+      <div className="grid lg:grid-cols-12 gap-10 w-full max-w-[1300px] mx-auto items-center">
+        <div className="lg:col-span-5 flex flex-col justify-center">
+          <span className="font-mono text-xs text-[var(--ink-soft)]">
+            0{index + 1} / 0{PROJECTS.length} · {project.year}
+          </span>
+          <h3 className="font-display font-bold mt-4" style={{ fontSize: 'clamp(2.6rem, 6vw, 5.5rem)', color: project.accent }}>
+            {project.title}
+          </h3>
+          <p className="font-serif-it text-2xl mt-2 text-[var(--ink-soft)]">{project.subtitle}</p>
+          <p className="mt-6 text-[var(--ink-soft)] leading-relaxed max-w-md">{project.blurb}</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {project.stack.map((s) => (
+              <span key={s} className="font-mono text-[10px] uppercase tracking-wider border border-[var(--line)] rounded-full px-3 py-1">
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="lg:col-span-7 flex flex-col justify-center">
+          <div className="relative overflow-hidden rounded-sm border border-[var(--line)] mb-8" style={{ aspectRatio: '3 / 2' }}>
+            <img
+              src={project.image}
+              alt={`${project.title} — ${project.subtitle}`}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+            <span
+              className="absolute top-3 left-3 font-mono text-[10px] uppercase tracking-wider px-2 py-1 rounded-full text-[var(--paper)]"
+              style={{ background: project.accent }}
+            >
+              {project.subtitle}
+            </span>
+          </div>
+          <ul className="space-y-5">
+            {project.points.map((pt, i) => (
+              <li key={i} className="flex gap-4 border-t border-[var(--line)] pt-4">
+                <span className="font-mono text-sm" style={{ color: project.accent }}>
+                  0{i + 1}
+                </span>
+                <span className="text-[var(--ink-soft)] leading-relaxed text-sm">{pt}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
-};
+}
 
-export default PortfolioV4;
+function ProjectsStacked() {
+  return (
+    <section id="projects" className="py-24 px-6">
+      <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--ink-soft)]">(03) — Selected Work</span>
+      <h2 className="font-display font-bold mt-4 mb-10" style={{ fontSize: 'clamp(2.8rem, 12vw, 5rem)' }}>
+        Selected Projects
+      </h2>
+      <div className="space-y-16">
+        {PROJECTS.map((p, i) => (
+          <Reveal key={p.id} className="border-t border-[var(--line)] pt-8">
+            <span className="font-mono text-xs text-[var(--ink-soft)]">0{i + 1} · {p.year}</span>
+            <h3 className="font-display font-bold mt-2" style={{ fontSize: 'clamp(2.2rem, 10vw, 3.5rem)', color: p.accent }}>
+              {p.title}
+            </h3>
+            <p className="font-serif-it text-xl text-[var(--ink-soft)]">{p.subtitle}</p>
+            <div className="relative overflow-hidden rounded-sm border border-[var(--line)] mt-5" style={{ aspectRatio: '3 / 2' }}>
+              <img src={p.image} alt={`${p.title} — ${p.subtitle}`} className="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <p className="mt-4 text-[var(--ink-soft)] leading-relaxed">{p.blurb}</p>
+            <ul className="mt-5 space-y-4">
+              {p.points.map((pt, j) => (
+                <li key={j} className="flex gap-3 text-sm leading-relaxed text-[var(--ink-soft)]">
+                  <span className="font-mono" style={{ color: p.accent }}>0{j + 1}</span>
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {p.stack.map((s) => (
+                <span key={s} className="font-mono text-[10px] uppercase tracking-wider border border-[var(--line)] rounded-full px-3 py-1">
+                  {s}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ SKILLS + EDUCATION */
+function Skills() {
+  return (
+    <section id="skills" className="py-24 md:py-40 px-6 md:px-10">
+      <div className="mx-auto max-w-[1500px] grid lg:grid-cols-12 gap-12">
+        <div className="lg:col-span-5">
+          <Reveal>
+            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--ink-soft)]">(04) — Capabilities</span>
+            <h2 className="font-display font-bold mt-6" style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)' }}>
+              The toolkit<br />behind the work.
+            </h2>
+          </Reveal>
+
+          <div className="mt-12 space-y-8">
+            {EDUCATION.map((e) => (
+              <Reveal key={e.short} className="border-t border-[var(--line)] pt-5">
+                <div className="flex items-baseline justify-between gap-4">
+                  <h3 className="font-display font-semibold text-xl">{e.short}</h3>
+                  <span className="font-mono text-xs text-[var(--ink-soft)]">{e.period}</span>
+                </div>
+                <div className="text-[var(--ink-soft)] mt-1">{e.degree}</div>
+                <div className="font-mono text-[11px] uppercase tracking-wider text-[var(--ink-faint)] mt-1">{e.place}</div>
+                <p className="text-sm text-[var(--ink-soft)] mt-2 leading-relaxed">{e.note}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        <div className="lg:col-span-7">
+          {SKILLS.map((group, i) => (
+            <Reveal key={group.label} delay={i * 0.05} className="border-t border-[var(--line)] py-6 grid md:grid-cols-12 gap-4">
+              <div className="md:col-span-4 font-mono text-xs uppercase tracking-[0.15em] text-[var(--ink-soft)] pt-1">
+                {group.label}
+              </div>
+              <div className="md:col-span-8 flex flex-wrap gap-2">
+                {group.items.map((it) => (
+                  <span
+                    key={it}
+                    className="text-sm border border-[var(--line)] rounded-full px-4 py-1.5 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors duration-300"
+                    data-hover
+                  >
+                    {it}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ CONTACT / FOOTER */
+function Contact() {
+  return (
+    <section id="contact" className="relative bg-[var(--ink)] text-[var(--paper)] px-6 md:px-10 py-24 md:py-40">
+      <div className="mx-auto max-w-[1500px]">
+        <span className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60">(05) — Contact</span>
+
+        <RevealWords
+          text="Let’s build something."
+          className="font-display font-bold mt-8 leading-[0.92]"
+          style={{ fontSize: 'clamp(3rem, 13vw, 13rem)' }}
+          as="h2"
+        />
+
+        <div className="mt-12">
+          <Magnetic strength={0.25}>
+            <a
+              href={`mailto:${PROFILE.email}`}
+              className="inline-block font-display font-medium link-underline"
+              style={{ fontSize: 'clamp(1.8rem, 6vw, 4.5rem)' }}
+              data-hover
+            >
+              {PROFILE.email}
+            </a>
+          </Magnetic>
+        </div>
+
+        <div className="mt-20 grid md:grid-cols-3 gap-10 border-t border-white/15 pt-10">
+          <div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.18em] opacity-50 mb-3">Elsewhere</div>
+            <div className="flex flex-col gap-2">
+              <a href={PROFILE.linkedin} target="_blank" rel="noreferrer" className="link-underline w-fit" data-hover>
+                LinkedIn ↗
+              </a>
+              <a href={PROFILE.github} target="_blank" rel="noreferrer" className="link-underline w-fit" data-hover>
+                GitHub ↗
+              </a>
+              <a href={PROFILE.resume} target="_blank" rel="noreferrer" className="link-underline w-fit" data-hover>
+                Résumé (PDF) ↗
+              </a>
+            </div>
+          </div>
+          <div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.18em] opacity-50 mb-3">Direct</div>
+            <div className="opacity-90">{PROFILE.phone}</div>
+            <div className="opacity-90">{PROFILE.location}</div>
+          </div>
+          <div className="md:text-right">
+            <div className="font-mono text-[11px] uppercase tracking-[0.18em] opacity-50 mb-3">Status</div>
+            <div style={{ color: '#e8916f' }}>Open to SWE / AI roles</div>
+            <button
+              onClick={() => scrollToId('top')}
+              className="mt-6 font-mono text-[11px] uppercase tracking-[0.18em] border border-white/30 rounded-full px-5 py-2 hover:bg-[var(--paper)] hover:text-[var(--ink)] transition-colors"
+              data-hover
+            >
+              Back to top ↑
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-16 font-mono text-[10px] uppercase tracking-[0.2em] opacity-40">
+          © {new Date().getFullYear()} Mingfan (Issac) Xie — Designed & built from scratch.
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ ROOT */
+export default function Portfolio() {
+  useSmoothScroll();
+  return (
+    <div className="bg-[var(--paper)] text-[var(--ink)]">
+      <div className="grain" />
+      <Cursor />
+      <Nav />
+      <main>
+        <Hero />
+        <About />
+        <Band />
+        <Experience />
+        <Projects />
+        <Skills />
+        <Contact />
+      </main>
+    </div>
+  );
+}

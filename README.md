@@ -7,17 +7,19 @@ Modern, minimalist portfolio website showcasing my work in software engineering 
 ## 🚀 Tech Stack
 
 - **React** - UI Framework
+- **Lenis** - Buttery smooth scrolling
+- **Framer Motion** - Scroll-linked & reveal animations
 - **Tailwind CSS** - Styling
 - **Lucide React** - Icons
 - **GitHub Pages** - Hosting
 
 ## 🎨 Features
 
-- **Fluid Animations** - Smooth page transitions and interactive elements
-- **Custom Cursor** - Enhanced desktop experience
-- **Responsive Design** - Optimized for all devices
-- **Dark Theme** - Easy on the eyes with cyan accents
-- **Single Page Application** - Fast, seamless navigation
+- **Fluid smooth scroll** - Lenis-powered momentum scrolling
+- **Horizontal "sliding" project gallery** - Scroll-driven on desktop, stacked on mobile
+- **Kinetic typography** - Word-by-word reveals, marquees, animated impact counters
+- **Editorial design** - Warm paper palette, grotesque + serif type, custom cursor & grain texture
+- **Responsive** - Optimized across desktop and mobile
 
 ## 💻 Local Development
 
@@ -41,20 +43,25 @@ npm run deploy
 ├── public/
 │   └── index.html
 ├── src/
-│   ├── Portfolio.jsx   # Main component
+│   ├── Portfolio.jsx   # Page composition / all sections
+│   ├── ui.jsx          # Reusable motion primitives (cursor, reveals, marquee, counters)
+│   ├── data.js         # Résumé content (single source of truth)
 │   ├── index.js        # Entry point
-│   └── index.css       # Global styles
+│   └── index.css       # Design tokens & global styles
 ├── package.json
 └── tailwind.config.js
 ```
 
 ## 🎯 Sections
 
-- **Home** - Introduction and hero section
-- **Experience** - Professional work history
-- **Projects** - Featured technical projects
-- **About** - Background and skills
-- **Contact** - Get in touch
+- **Hero** - Name, role, value proposition
+- **About + Impact** - Positioning with animated impact metrics
+- **Experience** - Juneng Robotics & Xiaomi (expandable details)
+- **Projects** - OfferWise AI & CommuneKit (horizontal slide gallery)
+- **Skills + Education** - Toolkit, UCLA & Purdue
+- **Contact** - Email, LinkedIn, GitHub, availability
+
+> ✏️ To update content, edit `src/data.js` — no component changes needed.
 
 ## 📝 License
 
