@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/MingfanX.github.io/static/css/main.88318fde.css",
+    "main.js": "/MingfanX.github.io/static/js/main.f1151dcf.js",
+    "static/js/57.e2316804.chunk.js": "/MingfanX.github.io/static/js/57.e2316804.chunk.js",
+    "static/media/offerwise.jpg": "/MingfanX.github.io/static/media/offerwise.55e3bbdb640afa06a3d9.jpg",
+    "static/media/communekit.jpg": "/MingfanX.github.io/static/media/communekit.621ece8d5eaa92985707.jpg",
+    "index.html": "/MingfanX.github.io/index.html",
+    "main.88318fde.css.map": "/MingfanX.github.io/static/css/main.88318fde.css.map",
+    "main.f1151dcf.js.map": "/MingfanX.github.io/static/js/main.f1151dcf.js.map",
+    "57.e2316804.chunk.js.map": "/MingfanX.github.io/static/js/57.e2316804.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.88318fde.css",
+    "static/js/main.f1151dcf.js"
+  ]
+}
