@@ -128,26 +128,40 @@ function Hero() {
 
       {/* Liquid name — the centerpiece */}
       <motion.div style={{ y, opacity }} className="mx-auto max-w-[1600px] w-full select-none">
-        <motion.div
-          initial={{ clipPath: 'inset(0 0 100% 0)' }}
-          animate={{ clipPath: 'inset(0 0 0% 0)' }}
-          transition={{ duration: 1.2, ease, delay: 0.15 }}
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease, delay: 0.25 }}
+          className="font-mono text-[11px] uppercase tracking-[0.3em] text-[var(--ink-soft)] mb-5 md:mb-7 flex items-center gap-3"
         >
-          <LiquidLine text="MINGFAN" variant="fill" className="w-full" />
-        </motion.div>
-        <motion.div
-          initial={{ clipPath: 'inset(0 0 100% 0)' }}
-          animate={{ clipPath: 'inset(0 0 0% 0)' }}
-          transition={{ duration: 1.2, ease, delay: 0.3 }}
-          className="-mt-[2vw] flex items-end gap-[3vw]"
-        >
-          <div className="flex-1">
-            <LiquidLine text="XIE" variant="stroke" />
-          </div>
-          <span className="font-serif-it text-[var(--ink-soft)] pb-[2vw]" style={{ fontSize: 'clamp(1.4rem, 5vw, 4rem)' }}>
-            ({PROFILE.alias})
+          <span className="inline-block w-8 h-px bg-accent" /> Portfolio — ’26
+        </motion.p>
+
+        <h1 className="leading-[0.86]">
+          <span className="block overflow-hidden">
+            <motion.span
+              initial={{ y: '108%' }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1, ease, delay: 0.2 }}
+              className="block"
+            >
+              <LiquidLine text="Mingfan" variant="fill" height="clamp(3rem, 11vw, 9.5rem)" />
+            </motion.span>
           </span>
-        </motion.div>
+          <span className="block overflow-hidden mt-1 md:mt-2">
+            <motion.span
+              initial={{ y: '108%' }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1, ease, delay: 0.34 }}
+              className="flex items-end gap-4 md:gap-7"
+            >
+              <LiquidLine text="Xie" variant="stroke" height="clamp(3rem, 11vw, 9.5rem)" />
+              <span className="font-serif-it text-[var(--ink-soft)] pb-[0.6em]" style={{ fontSize: 'clamp(1.1rem, 3.2vw, 2.6rem)' }}>
+                (Issac)
+              </span>
+            </motion.span>
+          </span>
+        </h1>
       </motion.div>
 
       {/* bottom row: tagline + CTA */}
@@ -260,9 +274,7 @@ function Experience() {
     <section id="work" className="py-24 md:py-40 px-6 md:px-10">
       <div className="mx-auto max-w-[1500px]">
         <Reveal className="flex items-end justify-between border-b border-[var(--line)] pb-6 mb-4">
-          <h2 className="font-display font-bold" style={{ fontSize: 'clamp(2.5rem, 7vw, 6rem)' }}>
-            Experience
-          </h2>
+          <LiquidLine text="Experience" height="clamp(2.4rem, 7vw, 5.5rem)" />
           <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--ink-soft)] mb-2">
             (02)
           </span>
@@ -365,11 +377,11 @@ function ProjectsHorizontal() {
         <motion.div style={{ x }} className="flex h-full" >
           {/* intro panel */}
           <div className="w-screen h-full shrink-0 flex flex-col justify-center px-10 lg:px-20">
-            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--ink-soft)]">(03) — Selected Work</span>
-            <h2 className="font-display font-bold mt-6" style={{ fontSize: 'clamp(3rem, 9vw, 9rem)' }}>
-              Selected<br />
-              <span className="text-stroke">Projects</span>
-            </h2>
+            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[var(--ink-soft)] mb-6">(03) — Selected Work</span>
+            <LiquidLine text="Selected" height="clamp(3rem, 9vw, 8rem)" />
+            <div className="mt-1">
+              <LiquidLine text="Projects" variant="stroke" height="clamp(3rem, 9vw, 8rem)" />
+            </div>
             <p className="mt-8 max-w-md text-[var(--ink-soft)] text-lg flex items-center gap-3">
               <ArrowUpRight className="w-5 h-5 rotate-45" /> Scroll to slide through the work
             </p>
@@ -540,12 +552,12 @@ function Contact() {
       <div className="mx-auto max-w-[1500px]">
         <span className="font-mono text-[11px] uppercase tracking-[0.25em] opacity-60">(05) — Contact</span>
 
-        <RevealWords
-          text="Let’s build something."
-          className="font-display font-bold mt-8 leading-[0.92]"
-          style={{ fontSize: 'clamp(3rem, 13vw, 13rem)' }}
-          as="h2"
-        />
+        <div className="mt-8 leading-[0.86]">
+          <LiquidLine text="Let’s build" color="#ece8e0" height="clamp(2.6rem, 11vw, 9.5rem)" />
+          <div className="mt-1">
+            <LiquidLine text="something." color="#ece8e0" height="clamp(2.6rem, 11vw, 9.5rem)" />
+          </div>
+        </div>
 
         <div className="mt-12">
           <Magnetic strength={0.25}>

@@ -294,23 +294,24 @@ export function LiquidDefs() {
   useEffect(() => {
     if (window.matchMedia('(pointer: coarse)').matches) return;
     let raf;
-    let cur = 6;
-    let target = 6;
+    let cur = 1.5;
+    let target = 1.5;
     let lastX = 0;
     let lastY = 0;
     let lastT = performance.now();
+    const REST = 1.5;
     const onMove = (e) => {
       const now = performance.now();
       const dt = Math.max(now - lastT, 8);
       const speed = Math.hypot(e.clientX - lastX, e.clientY - lastY) / dt;
-      target = Math.min(6 + speed * 22, 34);
+      target = Math.min(REST + speed * 14, 16);
       lastX = e.clientX;
       lastY = e.clientY;
       lastT = now;
     };
     const loop = () => {
-      cur += (target - cur) * 0.08;
-      target += (6 - target) * 0.05;
+      cur += (target - cur) * 0.09;
+      target += (REST - target) * 0.06;
       if (dispRef.current) dispRef.current.setAttribute('scale', cur.toFixed(2));
       raf = requestAnimationFrame(loop);
     };
@@ -334,7 +335,7 @@ export function LiquidDefs() {
               repeatCount="indefinite"
             />
           </feTurbulence>
-          <feDisplacementMap ref={dispRef} in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+          <feDisplacementMap ref={dispRef} in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </defs>
     </svg>
@@ -345,7 +346,7 @@ export function LiquidDefs() {
    Liquid SVG headline — text that ripples like liquid. Auto-fits to
    container width via measured viewBox.
 ------------------------------------------------------------------ */
-export function LiquidLine({ text, variant = 'fill', className = '' }) {
+export function LiquidLine({ text, variant = 'fill', className = '', height, style, color = '#111110' }) {
   const textRef = useRef(null);
   const [box, setBox] = useState(null);
 
@@ -367,16 +368,19 @@ export function LiquidLine({ text, variant = 'fill', className = '' }) {
     };
   }, [text]);
 
-  const pad = box ? box.h * 0.18 : 0;
+  const pad = box ? box.h * 0.16 : 0;
   const viewBox = box ? `${box.x - pad} ${box.y - pad} ${box.w + pad * 2} ${box.h + pad * 2}` : '0 0 100 30';
+  // Controlled-height mode keeps elegant proportions; otherwise fit to width.
+  const sizeStyle = height
+    ? { height, width: 'auto', maxWidth: '100%' }
+    : { width: '100%' };
 
   return (
     <svg
       className={className}
-      width="100%"
       viewBox={viewBox}
       preserveAspectRatio="xMinYMid meet"
-      style={{ display: 'block', overflow: 'visible' }}
+      style={{ display: 'block', overflow: 'visible', ...sizeStyle, ...style }}
       aria-label={text}
     >
       <text
@@ -389,8 +393,8 @@ export function LiquidLine({ text, variant = 'fill', className = '' }) {
         fontSize="220"
         letterSpacing="-6"
         filter="url(#liquid)"
-        fill={variant === 'stroke' ? 'transparent' : '#111110'}
-        stroke={variant === 'stroke' ? '#111110' : 'none'}
+        fill={variant === 'stroke' ? 'transparent' : color}
+        stroke={variant === 'stroke' ? color : 'none'}
         strokeWidth={variant === 'stroke' ? 2.5 : 0}
       >
         {text}
@@ -480,8 +484,8 @@ export function FlowingBackground() {
         inset: 0,
         zIndex: 0,
         pointerEvents: 'none',
-        filter: 'blur(70px) saturate(1.1)',
-        opacity: 0.55,
+        filter: 'blur(80px) saturate(1.05)',
+        opacity: 0.4,
       }}
     />
   );
