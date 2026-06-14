@@ -10,7 +10,11 @@ import {
   Reveal,
   Counter,
   Magnetic,
-  Marquee,
+  VelocityMarquee,
+  LiquidDefs,
+  LiquidLine,
+  FlowingBackground,
+  FlowImage,
 } from './ui';
 
 const NAV = [
@@ -98,67 +102,85 @@ function Nav() {
 function Hero() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 180]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 140]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const ease = [0.76, 0, 0.24, 1];
 
   return (
-    <section ref={ref} id="top" className="relative min-h-[100svh] flex flex-col justify-center px-6 md:px-10 pt-28 pb-16">
-      <motion.div style={{ y, opacity }} className="mx-auto max-w-[1500px] w-full">
-        <div className="flex items-center gap-4 mb-8 font-mono text-[11px] md:text-xs uppercase tracking-[0.25em] text-[var(--ink-soft)]">
-          <span className="inline-block w-10 h-px bg-[var(--ink)]" />
-          {PROFILE.roles.join('  /  ')}
+    <section ref={ref} id="top" className="relative min-h-[100svh] flex flex-col justify-between px-6 md:px-10 pt-28 pb-10 overflow-hidden">
+      {/* top meta row */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease, delay: 0.2 }}
+        className="mx-auto max-w-[1600px] w-full flex items-start justify-between font-mono text-[10px] md:text-[11px] uppercase tracking-[0.25em] text-[var(--ink-soft)]"
+      >
+        <div className="flex items-center gap-3">
+          <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse" />
+          {PROFILE.roles.join(' / ')}
         </div>
-
-        <h1 className="font-display font-bold text-[var(--ink)]" style={{ fontSize: 'clamp(3.5rem, 15vw, 16rem)' }}>
-          <RevealWords text="MINGFAN" as="div" />
-          <div className="flex flex-wrap items-baseline gap-x-6">
-            <RevealWords text="XIE" as="span" delay={0.1} className="text-stroke" />
-            <span className="font-serif-it text-[var(--ink-soft)]" style={{ fontSize: 'clamp(1.4rem, 4vw, 3.2rem)', fontStyle: 'italic' }}>
-              ({PROFILE.alias})
-            </span>
-          </div>
-        </h1>
-
-        <div className="mt-10 md:mt-14 grid md:grid-cols-12 gap-8 items-end">
-          <Reveal delay={0.3} className="md:col-span-7 lg:col-span-6">
-            <p className="text-lg md:text-2xl leading-relaxed text-[var(--ink-soft)] max-w-2xl">
-              I build <span className="text-[var(--ink)]">AI systems</span> and{' '}
-              <span className="text-[var(--ink)]">full-stack platforms</span> that ship{' '}
-              <span className="font-serif-it text-accent">measurable impact</span> — from edge perception
-              and MLOps to LLM agents.
-            </p>
-          </Reveal>
-          <Reveal delay={0.45} className="md:col-span-5 lg:col-start-9 lg:col-span-4 md:justify-self-end">
-            <div className="font-mono text-xs uppercase tracking-[0.18em] text-[var(--ink-soft)] space-y-1 md:text-right">
-              <div>UCLA — MEng AI ’27</div>
-              <div>Purdue — B.S. CS ’25</div>
-              <div className="text-accent">Open to SWE / AI roles</div>
-            </div>
-            <div className="mt-5 md:flex md:justify-end">
-              <Magnetic>
-                <a
-                  href={PROFILE.resume}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] border border-[var(--ink)] rounded-full px-5 py-2.5 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors duration-300"
-                  data-hover
-                >
-                  <Download className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition-transform" /> Download Résumé
-                </a>
-              </Magnetic>
-            </div>
-          </Reveal>
+        <div className="hidden md:block text-right leading-relaxed">
+          Based in {PROFILE.location}
+          <br />
+          UCLA MEng AI ’27 · Purdue CS ’25
         </div>
       </motion.div>
 
-      <button
-        onClick={() => scrollToId('about')}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--ink-soft)]"
-        data-hover
-      >
-        Scroll
-        <ArrowDown className="w-4 h-4 animate-bounce" />
-      </button>
+      {/* Liquid name — the centerpiece */}
+      <motion.div style={{ y, opacity }} className="mx-auto max-w-[1600px] w-full select-none">
+        <motion.div
+          initial={{ clipPath: 'inset(0 0 100% 0)' }}
+          animate={{ clipPath: 'inset(0 0 0% 0)' }}
+          transition={{ duration: 1.2, ease, delay: 0.15 }}
+        >
+          <LiquidLine text="MINGFAN" variant="fill" className="w-full" />
+        </motion.div>
+        <motion.div
+          initial={{ clipPath: 'inset(0 0 100% 0)' }}
+          animate={{ clipPath: 'inset(0 0 0% 0)' }}
+          transition={{ duration: 1.2, ease, delay: 0.3 }}
+          className="-mt-[2vw] flex items-end gap-[3vw]"
+        >
+          <div className="flex-1">
+            <LiquidLine text="XIE" variant="stroke" />
+          </div>
+          <span className="font-serif-it text-[var(--ink-soft)] pb-[2vw]" style={{ fontSize: 'clamp(1.4rem, 5vw, 4rem)' }}>
+            ({PROFILE.alias})
+          </span>
+        </motion.div>
+      </motion.div>
+
+      {/* bottom row: tagline + CTA */}
+      <div className="mx-auto max-w-[1600px] w-full grid md:grid-cols-12 gap-8 items-end">
+        <Reveal delay={0.5} className="md:col-span-6 lg:col-span-5">
+          <p className="text-lg md:text-2xl leading-relaxed text-[var(--ink-soft)] max-w-xl">
+            I build <span className="text-[var(--ink)]">AI systems</span> and{' '}
+            <span className="text-[var(--ink)]">full-stack platforms</span> that ship{' '}
+            <span className="font-serif-it text-accent">measurable impact</span>.
+          </p>
+        </Reveal>
+
+        <div className="md:col-span-6 lg:col-span-7 flex md:justify-end items-center gap-4">
+          <Magnetic>
+            <a
+              href={PROFILE.resume}
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] border border-[var(--ink)] rounded-full px-6 py-3 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors duration-300"
+              data-hover
+            >
+              <Download className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition-transform" /> Résumé
+            </a>
+          </Magnetic>
+          <button
+            onClick={() => scrollToId('about')}
+            className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--ink-soft)] hover:text-[var(--ink)] transition-colors"
+            data-hover
+          >
+            Scroll <ArrowDown className="w-4 h-4 animate-bounce" />
+          </button>
+        </div>
+      </div>
     </section>
   );
 }
@@ -217,10 +239,17 @@ function About() {
 /* ============================================================ MARQUEE BAND */
 function Band() {
   return (
-    <section className="py-10 md:py-16 border-y border-[var(--line)] overflow-hidden">
-      <div className="font-display font-bold uppercase tracking-tight" style={{ fontSize: 'clamp(2.5rem, 8vw, 7rem)' }}>
-        <Marquee items={MARQUEE} duration={34} />
-      </div>
+    <section className="py-8 md:py-14 border-y border-[var(--line)] overflow-hidden bg-[var(--paper-deep)]">
+      <VelocityMarquee baseVelocity={3}>
+        <span className="font-display font-bold uppercase tracking-tight flex items-center" style={{ fontSize: 'clamp(2.5rem, 8vw, 7rem)' }}>
+          {MARQUEE.map((m, i) => (
+            <span key={i} className="flex items-center">
+              <span className="px-8">{m}</span>
+              <span className="text-accent">✦</span>
+            </span>
+          ))}
+        </span>
+      </VelocityMarquee>
     </section>
   );
 }
@@ -377,15 +406,15 @@ function ProjectPanel({ project, index }) {
           </div>
         </div>
         <div className="lg:col-span-7 flex flex-col justify-center">
-          <div className="relative overflow-hidden rounded-sm border border-[var(--line)] mb-8" style={{ aspectRatio: '3 / 2' }}>
-            <img
+          <div className="relative mb-8">
+            <FlowImage
               src={project.image}
               alt={`${project.title} — ${project.subtitle}`}
-              className="w-full h-full object-cover"
-              loading="lazy"
+              accent={project.accent}
+              className="rounded-sm border border-[var(--line)] aspect-[3/2]"
             />
             <span
-              className="absolute top-3 left-3 font-mono text-[10px] uppercase tracking-wider px-2 py-1 rounded-full text-[var(--paper)]"
+              className="absolute top-3 left-3 z-10 font-mono text-[10px] uppercase tracking-wider px-2 py-1 rounded-full text-[var(--paper)]"
               style={{ background: project.accent }}
             >
               {project.subtitle}
@@ -422,9 +451,12 @@ function ProjectsStacked() {
               {p.title}
             </h3>
             <p className="font-serif-it text-xl text-[var(--ink-soft)]">{p.subtitle}</p>
-            <div className="relative overflow-hidden rounded-sm border border-[var(--line)] mt-5" style={{ aspectRatio: '3 / 2' }}>
-              <img src={p.image} alt={`${p.title} — ${p.subtitle}`} className="w-full h-full object-cover" loading="lazy" />
-            </div>
+            <FlowImage
+              src={p.image}
+              alt={`${p.title} — ${p.subtitle}`}
+              accent={p.accent}
+              className="rounded-sm border border-[var(--line)] aspect-[3/2] mt-5"
+            />
             <p className="mt-4 text-[var(--ink-soft)] leading-relaxed">{p.blurb}</p>
             <ul className="mt-5 space-y-4">
               {p.points.map((pt, j) => (
@@ -573,11 +605,13 @@ function Contact() {
 export default function Portfolio() {
   useSmoothScroll();
   return (
-    <div className="bg-[var(--paper)] text-[var(--ink)]">
+    <div className="relative bg-[var(--paper)] text-[var(--ink)]">
+      <FlowingBackground />
+      <LiquidDefs />
       <div className="grain" />
       <Cursor />
       <Nav />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <About />
         <Band />
