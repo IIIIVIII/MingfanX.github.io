@@ -3,16 +3,26 @@
 @import 'tailwindcss/utilities';
 
 /* ============================================================
-   Design tokens — warm editorial palette (monopo-inspired)
+   monopo-inspired design system — monochrome + mercury flow
    ============================================================ */
 :root {
-  --paper: #ece8e0;
-  --paper-deep: #e3ded4;
-  --ink: #111110;
-  --ink-soft: #4a4842;
-  --ink-faint: #8a857a;
-  --accent: #c8472b; /* warm terracotta */
-  --line: rgba(17, 17, 16, 0.14);
+  --paper: #ffffff;
+  --ink: #000000;
+  --carbon: #181818;
+  --ash: #6d6d6d;
+  --smoke: #9a9a9a;
+  --graphite: #636363;
+  --line: rgba(0, 0, 0, 0.12);
+
+  /* dark immersive frame */
+  --dark: #0b0b0b;
+  --dark-2: #111111;
+  --on-dark: #f2f2f2;
+  --on-dark-soft: rgba(242, 242, 242, 0.55);
+  --line-dark: rgba(255, 255, 255, 0.14);
+
+  /* signature mercury-flow gradient (green → orange → red) */
+  --mercury: linear-gradient(90deg, #a0e0ab 0%, #ffac2e 50%, #a52d25 100%);
 }
 
 * {
@@ -22,7 +32,6 @@
 }
 
 html {
-  /* Lenis controls scrolling; keep native fallback smooth */
   scroll-behavior: auto;
 }
 
@@ -30,11 +39,9 @@ html.lenis,
 html.lenis body {
   height: auto;
 }
-
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
-
 .lenis.lenis-stopped {
   overflow: hidden;
 }
@@ -42,53 +49,185 @@ html.lenis body {
 body {
   margin: 0;
   background: var(--paper);
-  color: var(--ink);
-  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    sans-serif;
+  color: var(--carbon);
+  font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  font-feature-settings: 'ss01';
 }
 
 /* ============================================================
    Type helpers
    ============================================================ */
 .font-display {
-  font-family: 'Space Grotesk', sans-serif;
-  letter-spacing: -0.03em;
-  line-height: 0.92;
-}
-
-.font-serif-it {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-style: italic;
-  letter-spacing: 0;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-weight: 300;
+  letter-spacing: -0.02em;
 }
 
 .font-mono {
   font-family: 'Space Mono', 'Courier New', monospace;
 }
 
-.text-accent {
-  color: var(--accent);
+.label {
+  font-family: 'Space Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 11px;
 }
 
-/* Outlined display text (used on huge headlines) */
+/* Outlined display text */
 .text-stroke {
-  -webkit-text-stroke: 1.4px var(--ink);
+  -webkit-text-stroke: 1.2px var(--ink);
+  color: transparent;
+}
+.text-stroke-light {
+  -webkit-text-stroke: 1px var(--on-dark);
   color: transparent;
 }
 
 /* ============================================================
-   Film grain + paper texture overlay
+   Mercury-flow gradient — animated, flowing across the text/fills
+   ============================================================ */
+@keyframes mercury-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.mercury-text {
+  background: var(--mercury);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: mercury-shift 6s linear infinite alternate;
+}
+
+.mercury-bg {
+  background: var(--mercury);
+  background-size: 200% 100%;
+  animation: mercury-shift 6s linear infinite alternate;
+}
+
+.mercury-line {
+  background: var(--mercury);
+  background-size: 200% 100%;
+  animation: mercury-shift 6s linear infinite alternate;
+}
+
+/* ============================================================
+   Gooey mercury metaballs — liquid that melts & merges
+   ============================================================ */
+.mercury-flow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.mercury-goo {
+  position: absolute;
+  inset: -15%;
+  filter: url(#goo) blur(7px) saturate(0.92);
+  opacity: 0.4;
+}
+.mb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+.mb-1 {
+  width: 32vw;
+  height: 32vw;
+  background: radial-gradient(circle at 50% 50%, #a0e0ab 0%, #a0e0ab 38%, transparent 66%);
+  top: 14%;
+  left: 6%;
+  animation: drift-1 18s ease-in-out infinite;
+}
+.mb-2 {
+  width: 28vw;
+  height: 28vw;
+  background: radial-gradient(circle at 50% 50%, #ffac2e 0%, #ffac2e 38%, transparent 66%);
+  top: 4%;
+  left: 50%;
+  animation: drift-2 22s ease-in-out infinite;
+}
+.mb-3 {
+  width: 36vw;
+  height: 36vw;
+  background: radial-gradient(circle at 50% 50%, #a52d25 0%, #a52d25 38%, transparent 66%);
+  top: 42%;
+  left: 60%;
+  animation: drift-3 20s ease-in-out infinite;
+}
+.mb-4 {
+  width: 24vw;
+  height: 24vw;
+  background: radial-gradient(circle at 50% 50%, #49c5b6 0%, #49c5b6 38%, transparent 66%);
+  top: 54%;
+  left: 22%;
+  animation: drift-4 26s ease-in-out infinite;
+}
+@keyframes drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(14vw, 10vh) scale(1.15); }
+  66% { transform: translate(-8vw, 16vh) scale(0.9); }
+}
+@keyframes drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-16vw, 14vh) scale(0.9); }
+  66% { transform: translate(10vw, -8vh) scale(1.2); }
+}
+@keyframes drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-12vw, -12vh) scale(1.1); }
+  66% { transform: translate(-20vw, 6vh) scale(0.95); }
+}
+@keyframes drift-4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(18vw, -10vh) scale(1.2); }
+  66% { transform: translate(6vw, 14vh) scale(0.85); }
+}
+
+/* ============================================================
+   Liquid divider — section edge that melts/drips between frames
+   ============================================================ */
+.liquid-divider {
+  position: relative;
+  width: 100%;
+  height: 90px;
+  overflow: hidden;
+  line-height: 0;
+}
+.liquid-divider svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Melt-on-hover for media */
+.melt-target {
+  transition: filter 0.4s ease;
+}
+.melt-target.melting {
+  filter: url(#melt);
+}
+
+/* ============================================================
+   Film grain overlay
    ============================================================ */
 .grain {
   position: fixed;
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.035;
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
@@ -104,27 +243,19 @@ body {
     transform: translateX(-50%);
   }
 }
-
 .marquee-track {
   display: inline-flex;
   white-space: nowrap;
   will-change: transform;
   animation: marquee var(--marquee-duration, 30s) linear infinite;
 }
-
 .marquee-track.reverse {
   animation-direction: reverse;
 }
 
 /* ============================================================
-   Reveal helpers
+   Link underline (hairline that wipes in)
    ============================================================ */
-.reveal-mask {
-  overflow: hidden;
-  display: inline-block;
-}
-
-/* Magnetic / interactive link underline */
 .link-underline {
   position: relative;
 }
@@ -133,7 +264,7 @@ body {
   position: absolute;
   left: 0;
   bottom: -2px;
-  height: 1.5px;
+  height: 1px;
   width: 100%;
   background: currentColor;
   transform: scaleX(0);
@@ -146,7 +277,7 @@ body {
 }
 
 /* ============================================================
-   Custom cursor (desktop)
+   Cursor
    ============================================================ */
 .cursor-dot,
 .cursor-ring {
@@ -159,12 +290,9 @@ body {
   mix-blend-mode: difference;
 }
 
-/* ============================================================
-   Selection + scrollbar
-   ============================================================ */
 ::selection {
-  background: var(--accent);
-  color: var(--paper);
+  background: #ffac2e;
+  color: #000;
 }
 
 ::-webkit-scrollbar {
@@ -172,9 +300,11 @@ body {
   height: 0;
 }
 
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
+  .marquee-track,
+  .mercury-text,
+  .mercury-bg,
+  .mercury-line {
     animation: none;
   }
 }

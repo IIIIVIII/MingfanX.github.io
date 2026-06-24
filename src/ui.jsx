@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   motion,
   useInView,
@@ -92,8 +92,8 @@ export function Cursor() {
           y: ringY,
           translateX: '-50%',
           translateY: '-50%',
-          width: hover ? 64 : 30,
-          height: hover ? 64 : 30,
+          width: hover ? 60 : 28,
+          height: hover ? 60 : 28,
           border: '1px solid rgba(255,255,255,0.9)',
         }}
       />
@@ -126,16 +126,12 @@ export function RevealWords({ text, className = '', delay = 0, as = 'div', style
   return (
     <MotionTag ref={ref} className={className} style={style} aria-label={text}>
       {words.map((w, i) => (
-        <span key={i} className="reveal-mask" aria-hidden>
+        <span key={i} style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top' }} aria-hidden>
           <motion.span
             style={{ display: 'inline-block' }}
             initial={{ y: '110%' }}
             animate={inView ? { y: 0 } : { y: '110%' }}
-            transition={{
-              duration: 0.9,
-              ease: [0.22, 1, 0.36, 1],
-              delay: delay + i * 0.06,
-            }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: delay + i * 0.05 }}
           >
             {w}
           </motion.span>
@@ -143,6 +139,30 @@ export function RevealWords({ text, className = '', delay = 0, as = 'div', style
         </span>
       ))}
     </MotionTag>
+  );
+}
+
+/* ------------------------------------------------------------------
+   Line-by-line reveal (for multi-line headlines, clip from bottom)
+------------------------------------------------------------------ */
+export function RevealLines({ lines, className = '', delay = 0, lineClassName = '' }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-10% 0px' });
+  return (
+    <span ref={ref} className={className}>
+      {lines.map((ln, i) => (
+        <span key={i} className={`block overflow-hidden ${lineClassName}`}>
+          <motion.span
+            className="block"
+            initial={{ y: '108%' }}
+            animate={inView ? { y: 0 } : { y: '108%' }}
+            transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: delay + i * 0.1 }}
+          >
+            {ln}
+          </motion.span>
+        </span>
+      ))}
+    </span>
   );
 }
 
@@ -226,35 +246,7 @@ export function Magnetic({ children, strength = 0.35, className = '' }) {
 }
 
 /* ------------------------------------------------------------------
-   Marquee strip
------------------------------------------------------------------- */
-export function Marquee({ items, duration = 32, reverse = false, separator = '✦' }) {
-  const content = (
-    <>
-      {items.map((it, i) => (
-        <span key={i} className="inline-flex items-center">
-          <span className="px-6">{it}</span>
-          <span className="text-accent">{separator}</span>
-        </span>
-      ))}
-    </>
-  );
-  return (
-    <div className="overflow-hidden w-full">
-      <div
-        className={`marquee-track ${reverse ? 'reverse' : ''}`}
-        style={{ '--marquee-duration': `${duration}s` }}
-      >
-        {content}
-        {content}
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------
-   Scroll-velocity marquee — flows on its own, speeds up and reverses
-   direction based on how fast you scroll (the monopo / awwwards move)
+   Scroll-velocity marquee
 ------------------------------------------------------------------ */
 export function VelocityMarquee({ children, baseVelocity = 4, className = '' }) {
   const baseX = useMotionValue(0);
@@ -286,56 +278,29 @@ export function VelocityMarquee({ children, baseVelocity = 4, className = '' }) 
 }
 
 /* ------------------------------------------------------------------
-   Shared liquid SVG filter — continuously flows (SMIL) and intensifies
-   with pointer speed. Applied to the hero name for a liquid feel.
+   Fluid SVG filters — gooey metaball merge (#goo) + melting
+   displacement (#melt). Render once near the root.
 ------------------------------------------------------------------ */
-export function LiquidDefs() {
-  const dispRef = useRef(null);
-  useEffect(() => {
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    let raf;
-    let cur = 1.5;
-    let target = 1.5;
-    let lastX = 0;
-    let lastY = 0;
-    let lastT = performance.now();
-    const REST = 1.5;
-    const onMove = (e) => {
-      const now = performance.now();
-      const dt = Math.max(now - lastT, 8);
-      const speed = Math.hypot(e.clientX - lastX, e.clientY - lastY) / dt;
-      target = Math.min(REST + speed * 14, 16);
-      lastX = e.clientX;
-      lastY = e.clientY;
-      lastT = now;
-    };
-    const loop = () => {
-      cur += (target - cur) * 0.09;
-      target += (REST - target) * 0.06;
-      if (dispRef.current) dispRef.current.setAttribute('scale', cur.toFixed(2));
-      raf = requestAnimationFrame(loop);
-    };
-    window.addEventListener('pointermove', onMove);
-    raf = requestAnimationFrame(loop);
-    return () => {
-      window.removeEventListener('pointermove', onMove);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
+export function FluidDefs() {
   return (
     <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden>
       <defs>
-        <filter id="liquid" x="-30%" y="-30%" width="160%" height="160%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.009 0.014" numOctaves="2" seed="4" result="noise">
-            <animate
-              attributeName="baseFrequency"
-              dur="20s"
-              values="0.009 0.014; 0.018 0.009; 0.011 0.017; 0.009 0.014"
-              repeatCount="indefinite"
-            />
+        <filter id="goo">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="22" result="blur" />
+          <feColorMatrix
+            in="blur"
+            mode="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -12"
+            result="goo"
+          />
+          <feBlend in="SourceGraphic" in2="goo" />
+        </filter>
+
+        <filter id="melt" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.02" numOctaves="2" seed="7" result="n">
+            <animate attributeName="baseFrequency" dur="9s" values="0.008 0.02; 0.02 0.012; 0.008 0.02" repeatCount="indefinite" />
           </feTurbulence>
-          <feDisplacementMap ref={dispRef} in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </defs>
     </svg>
@@ -343,166 +308,66 @@ export function LiquidDefs() {
 }
 
 /* ------------------------------------------------------------------
-   Liquid SVG headline — text that ripples like liquid. Auto-fits to
-   container width via measured viewBox.
+   Mercury flow — gooey green/orange/red metaballs that melt & merge.
+   Atmosphere for dark immersive frames. Never stops moving.
 ------------------------------------------------------------------ */
-export function LiquidLine({ text, variant = 'fill', className = '', height, style, color = '#111110' }) {
-  const textRef = useRef(null);
-  const [box, setBox] = useState(null);
-
-  useLayoutEffect(() => {
-    const measure = () => {
-      if (!textRef.current) return;
-      const b = textRef.current.getBBox();
-      if (b.width > 0) setBox({ x: b.x, y: b.y, w: b.width, h: b.height });
-    };
-    measure();
-    const id = setTimeout(measure, 400); // refit after webfont loads
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(measure);
-    }
-    window.addEventListener('resize', measure);
-    return () => {
-      clearTimeout(id);
-      window.removeEventListener('resize', measure);
-    };
-  }, [text]);
-
-  const pad = box ? box.h * 0.16 : 0;
-  const viewBox = box ? `${box.x - pad} ${box.y - pad} ${box.w + pad * 2} ${box.h + pad * 2}` : '0 0 100 30';
-  // Controlled-height mode keeps elegant proportions; otherwise fit to width.
-  const sizeStyle = height
-    ? { height, width: 'auto', maxWidth: '100%' }
-    : { width: '100%' };
-
+export function MercuryFlow({ className = '' }) {
   return (
-    <svg
-      className={className}
-      viewBox={viewBox}
-      preserveAspectRatio="xMinYMid meet"
-      style={{ display: 'block', overflow: 'visible', ...sizeStyle, ...style }}
-      aria-label={text}
-    >
-      <text
-        ref={textRef}
-        x="0"
-        y="0"
-        dominantBaseline="text-before-edge"
-        fontFamily="'Space Grotesk', sans-serif"
-        fontWeight="700"
-        fontSize="220"
-        letterSpacing="-6"
-        filter="url(#liquid)"
-        fill={variant === 'stroke' ? 'transparent' : color}
-        stroke={variant === 'stroke' ? color : 'none'}
-        strokeWidth={variant === 'stroke' ? 2.5 : 0}
-      >
-        {text}
-      </text>
-    </svg>
+    <div className={`mercury-flow ${className}`} aria-hidden>
+      <div className="mercury-goo">
+        <span className="mb mb-1" />
+        <span className="mb mb-2" />
+        <span className="mb mb-3" />
+        <span className="mb mb-4" />
+      </div>
+    </div>
   );
 }
 
 /* ------------------------------------------------------------------
-   Flowing gradient background — drifting warm metaballs over paper,
-   nudged by the cursor. Never stops moving.
+   Liquid divider — a melting/dripping edge between two frames.
+   `from` is the top surface color, `to` is the wave (next frame).
 ------------------------------------------------------------------ */
-export function FlowingBackground() {
-  const canvasRef = useRef(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let raf;
-    let w = 0;
-    let h = 0;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const mouse = { x: 0.5, y: 0.4, tx: 0.5, ty: 0.4 };
-
-    const resize = () => {
-      w = window.innerWidth;
-      h = window.innerHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    resize();
-
-    const blobs = [
-      { c: [200, 71, 43], r: 0.42, ax: 0.16, ay: 0.10, sx: 0.00021, sy: 0.00017, px: 0.30, py: 0.40 },
-      { c: [154, 91, 45], r: 0.40, ax: 0.14, ay: 0.13, sx: 0.00015, sy: 0.00024, px: 0.72, py: 0.30 },
-      { c: [212, 178, 132], r: 0.46, ax: 0.18, ay: 0.12, sx: 0.00019, sy: 0.00013, px: 0.55, py: 0.72 },
-      { c: [120, 110, 150], r: 0.34, ax: 0.12, ay: 0.16, sx: 0.00012, sy: 0.00020, px: 0.20, py: 0.78 },
-    ];
-
-    const onMove = (e) => {
-      mouse.tx = e.clientX / window.innerWidth;
-      mouse.ty = e.clientY / window.innerHeight;
-    };
-
-    const draw = (t) => {
-      mouse.x += (mouse.tx - mouse.x) * 0.05;
-      mouse.y += (mouse.ty - mouse.y) * 0.05;
-      ctx.clearRect(0, 0, w, h);
-      ctx.globalCompositeOperation = 'source-over';
-      blobs.forEach((b, i) => {
-        const mInfX = (mouse.x - 0.5) * (i % 2 ? -1 : 1) * 0.12;
-        const mInfY = (mouse.y - 0.5) * (i % 2 ? 1 : -1) * 0.12;
-        const cx = (b.px + Math.sin(t * b.sx + i) * b.ax + mInfX) * w;
-        const cy = (b.py + Math.cos(t * b.sy + i) * b.ay + mInfY) * h;
-        const rad = b.r * Math.max(w, h);
-        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
-        const [r, gr, bl] = b.c;
-        g.addColorStop(0, `rgba(${r},${gr},${bl},0.42)`);
-        g.addColorStop(1, `rgba(${r},${gr},${bl},0)`);
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(cx, cy, rad, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      raf = requestAnimationFrame(draw);
-    };
-
-    window.addEventListener('resize', resize);
-    window.addEventListener('pointermove', onMove);
-    raf = requestAnimationFrame(draw);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('pointermove', onMove);
-    };
-  }, []);
-
+export function LiquidDivider({ from = 'var(--paper)', to = 'var(--dark)' }) {
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 0,
-        pointerEvents: 'none',
-        filter: 'blur(80px) saturate(1.05)',
-        opacity: 0.4,
-      }}
-    />
+    <div className="liquid-divider" style={{ background: from }} aria-hidden>
+      <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
+        <path fill={to}>
+          <animate
+            attributeName="d"
+            dur="10s"
+            repeatCount="indefinite"
+            values="
+              M0,40 C240,90 480,10 720,45 C960,80 1200,20 1440,45 L1440,90 L0,90 Z;
+              M0,50 C240,15 480,85 720,40 C960,5 1200,75 1440,40 L1440,90 L0,90 Z;
+              M0,40 C240,90 480,10 720,45 C960,80 1200,20 1440,45 L1440,90 L0,90 Z"
+          />
+        </path>
+      </svg>
+    </div>
   );
 }
 
 /* ------------------------------------------------------------------
-   Flowing image reveal — clip-path wipe in + parallax drift on scroll
+   Flowing image reveal — clip-path wipe + parallax drift on scroll,
+   plus a melting distortion on hover.
 ------------------------------------------------------------------ */
-export function FlowImage({ src, alt, className = '', accent }) {
+export function FlowImage({ src, alt, className = '', overlay = 'rgba(255,255,255,0.92)', melt = true }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-12% 0px' });
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.12, 1, 1.12]);
+  const [hovering, setHovering] = useState(false);
 
   return (
-    <div ref={ref} className={`relative overflow-hidden ${className}`}>
+    <div
+      ref={ref}
+      className={`relative overflow-hidden ${className}`}
+      onMouseEnter={() => melt && setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      data-hover
+    >
       <motion.div
         initial={{ clipPath: 'inset(0 0 100% 0)' }}
         animate={inView ? { clipPath: 'inset(0 0 0% 0)' } : { clipPath: 'inset(0 0 100% 0)' }}
@@ -514,15 +379,15 @@ export function FlowImage({ src, alt, className = '', accent }) {
           alt={alt}
           loading="lazy"
           style={{ y, scale }}
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover melt-target ${hovering ? 'melting' : ''}`}
         />
       </motion.div>
-      {accent && (
+      {overlay && (
         <motion.div
           initial={{ scaleY: 1 }}
           animate={inView ? { scaleY: 0 } : { scaleY: 1 }}
-          transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1], delay: 0.1 }}
-          style={{ background: accent, transformOrigin: 'bottom' }}
+          transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1], delay: 0.08 }}
+          style={{ background: overlay, transformOrigin: 'bottom' }}
           className="absolute inset-0"
         />
       )}

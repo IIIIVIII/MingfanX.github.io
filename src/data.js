@@ -1,6 +1,7 @@
 // Central content source — résumé data for the portfolio.
 import offerwiseImg from './assets/offerwise.jpg';
 import communekitImg from './assets/communekit.jpg';
+import diyplanImg from './assets/diyplan.jpg';
 
 export const PROFILE = {
   name: 'Mingfan Xie',
@@ -68,6 +69,23 @@ export const EXPERIENCE = [
 ];
 
 export const PROJECTS = [
+  {
+    id: 'diyplan',
+    title: 'DIYPlan Agent',
+    subtitle: 'Multimodal Agent for DIY Build Plans',
+    year: '2026',
+    stack: ['Multimodal Agents', 'Model Routing', 'MLX', 'RAG', 'OpenAI', 'Node.js', 'Python'],
+    link: 'https://github.com/IIIIVIII/DIYPlan-Agent',
+    blurb:
+      'A local-first multimodal agent that turns a furniture inspiration photo into a verifiable, beginner-safe DIY build plan — and a sandbox for studying model routing, structured generation and inference cost.',
+    points: [
+      'Designed a multimodal agent workflow (observation → measurement → decomposition → routing → retrieval → manual generation → verification) that turns a reference image into structured parts, materials, tools, costs and safety checks.',
+      'Built pluggable model routing — cost-optimized, quality-first, cascade, local-first and on-device Local MLX on Apple Silicon — so expensive vision-language calls run only where they add value, with cloud / local / mock fallbacks.',
+      'Treated generation as a verifiable model contract: the model fills a strict assembly schema while a deterministic renderer draws LEGO-style instruction manuals, with an offline benchmark harness comparing quality, latency and cost units.',
+    ],
+    accent: '#a0e0ab',
+    image: diyplanImg,
+  },
   {
     id: 'offerwise',
     title: 'OfferWise AI',
